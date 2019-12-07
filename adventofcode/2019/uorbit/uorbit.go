@@ -47,15 +47,13 @@ func (n node) checksum() int {
 	return checksum
 }
 
-func newTree(nodemaps [][]string) (*node, []*node, map[string]*node) {
-	nodelist := []*node{}
+func newTree(nodemaps [][]string) (*node, map[string]*node) {
 	cache := make(map[string]*node)
 
 	// Prepare COM node since it may not necessarily be the first one
 	name := "COM"
 	root := &node{name: name}
 	cache[name] = root
-	nodelist = append(nodelist, root)
 
 	for _, nodemap := range nodemaps {
 		var n1, n2 *node
@@ -68,22 +66,20 @@ func newTree(nodemaps [][]string) (*node, []*node, map[string]*node) {
 		if n1 == nil {
 			n1 = &node{name: nodemap[0]}
 			cache[nodemap[0]] = n1
-			nodelist = append(nodelist, n1)
 		}
 		if n2 == nil {
 			n2 = &node{name: nodemap[1]}
 			cache[nodemap[1]] = n2
-			nodelist = append(nodelist, n2)
 		}
 		n1.children = append(n1.children, n2)
 		n2.parent = n1
 	}
-	return root, nodelist, cache
+	return root, cache
 }
 
-func checksum(nodelist []*node) int {
+func checksum(nodemap map[string]*node) int {
 	sum := 0
-	for _, node := range nodelist {
+	for _, node := range nodemap {
 		sum += node.checksum()
 	}
 	return sum
@@ -113,13 +109,13 @@ func minOrbitalTransferCount(nodemap map[string]*node) int {
 			}
 			youlength++
 		}
-		sanlength++
 		if commonAncestor != nil {
 			break
 		}
 		tn = tn.parent
+		sanlength++
 	}
-	return youlength + sanlength - 1
+	return youlength + sanlength
 }
 
 func main() {
@@ -130,7 +126,7 @@ func main() {
 		ab := strings.Split(nm, ")")
 		nodemaps = append(nodemaps, []string{ab[0], ab[1]})
 	}
-	_, nodelist, nodemap := newTree(nodemaps)
-	fmt.Println(checksum(nodelist))
+	_, nodemap := newTree(nodemaps)
+	fmt.Println(checksum(nodemap))
 	fmt.Println(minOrbitalTransferCount(nodemap))
 }
