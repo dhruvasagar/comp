@@ -89,16 +89,16 @@ func checksum(nodelist []*node) int {
 	return sum
 }
 
-func minOrbitalTransferCount(tree *node, nodemap map[string]*node) int {
+func minOrbitalTransferCount(nodemap map[string]*node) int {
 	you := "YOU"
 	san := "SAN"
 	younode := nodemap[you]
 	sannode := nodemap[san]
-	you_heirarchy := []*node{}
+	youHeirarchy := []*node{}
 	tn := younode.parent
-	var common_ancestor *node
+	var commonAncestor *node
 	for tn.parent != nil {
-		you_heirarchy = append(you_heirarchy, tn)
+		youHeirarchy = append(youHeirarchy, tn)
 		tn = tn.parent
 	}
 	youlength := 0
@@ -106,15 +106,15 @@ func minOrbitalTransferCount(tree *node, nodemap map[string]*node) int {
 	tn = sannode.parent
 	for tn.parent != nil {
 		youlength = 0
-		for _, youp := range you_heirarchy {
+		for _, youp := range youHeirarchy {
 			if youp == tn {
-				common_ancestor = tn
+				commonAncestor = tn
 				break
 			}
 			youlength++
 		}
 		sanlength++
-		if common_ancestor != nil {
+		if commonAncestor != nil {
 			break
 		}
 		tn = tn.parent
@@ -130,7 +130,7 @@ func main() {
 		ab := strings.Split(nm, ")")
 		nodemaps = append(nodemaps, []string{ab[0], ab[1]})
 	}
-	tree, nodelist, nodemap := newTree(nodemaps)
+	_, nodelist, nodemap := newTree(nodemaps)
 	fmt.Println(checksum(nodelist))
-	fmt.Println(minOrbitalTransferCount(tree, nodemap))
+	fmt.Println(minOrbitalTransferCount(nodemap))
 }
