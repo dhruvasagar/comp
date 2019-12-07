@@ -1,5 +1,3 @@
-require 'pp'
-
 $opfunc = {
   1 => 'add',
   2 => 'mul',
