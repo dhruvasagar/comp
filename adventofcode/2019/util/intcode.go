@@ -122,7 +122,6 @@ func (c *Computer) Next() error {
 		c.ip += 2
 	case 99:
 		close(c.output)
-		fmt.Println("program halted")
 		return errors.New("program halted")
 	default:
 		close(c.output)

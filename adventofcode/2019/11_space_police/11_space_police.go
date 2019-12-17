@@ -86,11 +86,13 @@ type Robot struct {
 	position      Position
 	orientation   Orientation
 	visitedPanels map[string]*Panel
+	paintedPanels map[string]*Panel
 }
 
 func NewRobot() *Robot {
 	robot := &Robot{
 		visitedPanels: make(map[string]*Panel),
+		paintedPanels: make(map[string]*Panel),
 	}
 	position := Position{x: 0, y: 0}
 	robot.Update(position, upward)
@@ -162,6 +164,9 @@ func (r *Robot) Panel(position Position) *Panel {
 func (r *Robot) Paint(color Color) {
 	panel := r.CurrentPanel()
 	panel.color = color
+
+	key := fmt.Sprintln(panel.position)
+	r.paintedPanels[key] = panel
 }
 
 func (r *Robot) Move(direction Direction) {
@@ -208,7 +213,7 @@ func (r *Robot) PaintAndMove(color Color, direction Direction) {
 }
 
 func (r *Robot) Length() int {
-	return len(r.visitedPanels) - 1
+	return len(r.paintedPanels)
 }
 
 func part1() {
@@ -218,14 +223,11 @@ func part1() {
 
 	robot := NewRobot()
 
+	computer.Type(0)
+	go computer.Run()
+
 	for {
 		// fmt.Println("robot: ", robot)
-
-		panel := robot.CurrentPanel()
-		computer.Type(int(panel.color))
-
-		go computer.Run()
-
 		color, ok := computer.Read()
 		if !ok {
 			break
@@ -236,11 +238,47 @@ func part1() {
 		}
 		// fmt.Println("Panel: ", panel)
 		robot.PaintAndMove(Color(color), Direction(direction))
+
+		panel := robot.CurrentPanel()
+		computer.Type(int(panel.color))
 	}
 
+	fmt.Println(robot)
+	fmt.Println(robot.Length())
+}
+
+func part2() {
+	instructions := util.ReadIntcodeInstructions()
+	computer := util.NewComputer(instructions, 0)
+	defer computer.Close()
+
+	robot := NewRobot()
+
+	computer.Type(1)
+	go computer.Run()
+
+	for {
+		// fmt.Println("robot: ", robot)
+		color, ok := computer.Read()
+		if !ok {
+			break
+		}
+		direction, ok := computer.Read()
+		if !ok {
+			break
+		}
+		// fmt.Println("Panel: ", panel)
+		robot.PaintAndMove(Color(color), Direction(direction))
+
+		panel := robot.CurrentPanel()
+		computer.Type(int(panel.color))
+	}
+
+	fmt.Println(robot)
 	fmt.Println(robot.Length())
 }
 
 func main() {
 	part1()
+	part2()
 }
