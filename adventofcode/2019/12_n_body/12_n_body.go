@@ -73,13 +73,11 @@ func (m *Moon) updatePosition() {
 
 func (m *Moon) potEnergy() int {
 	energy := m.position.energy()
-	fmt.Printf("potential energy of moon %s: %d\n", m.name, energy)
 	return energy
 }
 
 func (m *Moon) kinEnergy() int {
 	energy := m.velocity.energy()
-	fmt.Printf("kinetic energy of moon %s: %d\n", m.name, energy)
 	return energy
 }
 
@@ -126,6 +124,26 @@ func (s System) step(n int) {
 	}
 }
 
+func (s System) findSteps() int {
+	n := 0
+	history := make(map[string]int)
+	for {
+		for _, m := range s {
+			m.applyGravity(s.neighbors(m))
+		}
+		for _, m := range s {
+			m.updatePosition()
+		}
+		key := fmt.Sprintln(s)
+		if _, ok := history[key]; ok {
+			break
+		}
+		history[key] = 1
+		n++
+	}
+	return n
+}
+
 func (s System) energy() int {
 	energy := 0
 	for _, m := range s {
@@ -151,12 +169,13 @@ func main() {
 		velocity: &Velocity{},
 	}
 	moon4 := &Moon{
-		name:     "3",
+		name:     "4",
 		position: &Position{x: 12, y: 4, z: 2},
 		velocity: &Velocity{},
 	}
 	system := System{moon1, moon2, moon3, moon4}
-	system.step(1000)
-	fmt.Println(system)
-	fmt.Println(system.energy())
+	// system.step(1000)
+	// fmt.Println(system)
+	// fmt.Println(system.energy())
+	fmt.Println(system.findSteps())
 }
