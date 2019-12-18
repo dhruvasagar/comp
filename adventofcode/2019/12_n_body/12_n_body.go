@@ -3,6 +3,11 @@ package main
 import (
 	"fmt"
 	"math"
+	"regexp"
+	"strconv"
+	"strings"
+
+	"github.com/dhruvasagar/adventofcode/2019/util"
 )
 
 type Position struct {
@@ -53,10 +58,20 @@ type Moon struct {
 	name     string
 	position *Position
 	velocity *Velocity
+
+	positionHistory []Position
 }
 
 func (m Moon) String() string {
 	return fmt.Sprintf("moon-%s %s, %s", m.name, m.position, m.velocity)
+}
+
+func (m *Moon) reset() {
+	if len(m.positionHistory) > 0 {
+		m.position = &m.positionHistory[0]
+		m.velocity = &Velocity{}
+		m.positionHistory = []Position{}
+	}
 }
 
 func (m *Moon) applyGravity(moons []*Moon) {
@@ -66,9 +81,13 @@ func (m *Moon) applyGravity(moons []*Moon) {
 }
 
 func (m *Moon) updatePosition() {
+	if len(m.positionHistory) == 0 {
+		m.positionHistory = append(m.positionHistory, *m.position)
+	}
 	m.position.x += m.velocity.x
 	m.position.y += m.velocity.y
 	m.position.z += m.velocity.z
+	m.positionHistory = append(m.positionHistory, *m.position)
 }
 
 func (m *Moon) potEnergy() int {
@@ -144,6 +163,68 @@ func (s System) findSteps() int {
 	return n
 }
 
+func (s System) findPeriod() int {
+	n := 1000
+	fmt.Printf("running %d steps to find periods\n", n)
+	s.step(n)
+	positionXs := make([][]int, n+1)
+	positionYs := make([][]int, n+1)
+	positionZs := make([][]int, n+1)
+	for i, m := range s {
+		for j, h := range m.positionHistory {
+			if len(positionXs[j]) == 0 {
+				positionXs[j] = make([]int, len(s))
+			}
+			if len(positionYs[j]) == 0 {
+				positionYs[j] = make([]int, len(s))
+			}
+			if len(positionZs[j]) == 0 {
+				positionZs[j] = make([]int, len(s))
+			}
+			positionXs[j][i] = h.x
+			positionYs[j][i] = h.y
+			positionZs[j][i] = h.z
+		}
+	}
+	periodX := period(positionXs)
+	periodY := period(positionYs)
+	periodZ := period(positionZs)
+	fmt.Printf("periods X:%d, Y:%d, Z:%d\n", periodX, periodY, periodZ)
+	if periodX == -1 || periodY == -1 || periodZ == -1 {
+		return s.findPeriod()
+	}
+	return lcm(periodX, lcm(periodY, periodZ))
+}
+
+func gcd(a, b int) int {
+	if a == 0 {
+		return b
+	}
+	if b == 0 {
+		return a
+	}
+	if a < b {
+		return gcd(a, b-a)
+	}
+	return gcd(b, a-b)
+}
+
+func lcm(a, b int) int {
+	return (a * b) / gcd(a, b)
+}
+
+func period(as [][]int) int {
+	cache := make(map[string]int)
+	for i, a := range as {
+		key := strings.Trim(strings.Join(strings.Fields(fmt.Sprint(a)), ","), "[]")
+		if j, ok := cache[key]; ok {
+			return i - j
+		}
+		cache[key] = i
+	}
+	return -1
+}
+
 func (s System) energy() int {
 	energy := 0
 	for _, m := range s {
@@ -152,30 +233,45 @@ func (s System) energy() int {
 	return energy
 }
 
+func (s System) reset() {
+	for _, m := range s {
+		m.reset()
+	}
+}
+
+func parseInput() System {
+	s := System{}
+	lines := util.ReadLines()
+	posRegex := regexp.MustCompile(`^<x=(-?\d+),\s*y=(-?\d+),\s*z=(-?\d+)>$`)
+	for i, line := range lines {
+		rposes := posRegex.FindAllStringSubmatch(line, -1)[0]
+		x, _ := strconv.Atoi(rposes[1])
+		y, _ := strconv.Atoi(rposes[2])
+		z, _ := strconv.Atoi(rposes[3])
+		moon := &Moon{
+			name:     fmt.Sprintf("%d", i),
+			position: &Position{x: x, y: y, z: z},
+			velocity: &Velocity{},
+		}
+		s = append(s, moon)
+	}
+	return s
+}
+
+func part1(system System) {
+	system.reset()
+	system.step(1000)
+	fmt.Println(system.energy())
+}
+
+func part2(system System) {
+	// Not right
+	system.reset()
+	fmt.Println(system.findPeriod())
+}
+
 func main() {
-	moon1 := &Moon{
-		name:     "1",
-		position: &Position{x: 1, y: 2, z: -9},
-		velocity: &Velocity{},
-	}
-	moon2 := &Moon{
-		name:     "2",
-		position: &Position{x: -1, y: -9, z: -4},
-		velocity: &Velocity{},
-	}
-	moon3 := &Moon{
-		name:     "3",
-		position: &Position{x: 17, y: 6, z: 8},
-		velocity: &Velocity{},
-	}
-	moon4 := &Moon{
-		name:     "4",
-		position: &Position{x: 12, y: 4, z: 2},
-		velocity: &Velocity{},
-	}
-	system := System{moon1, moon2, moon3, moon4}
-	// system.step(1000)
-	// fmt.Println(system)
-	// fmt.Println(system.energy())
-	fmt.Println(system.findSteps())
+	system := parseInput()
+	part1(system)
+	part2(system)
 }

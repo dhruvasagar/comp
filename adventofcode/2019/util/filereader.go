@@ -10,15 +10,8 @@ import (
 	"strings"
 )
 
-func ReadLines(day int) []string {
-	fileName := fmt.Sprintf("../input/day%d.txt", day)
-	file, err := os.Open(fileName)
-	defer file.Close()
-	if err != nil {
-		fmt.Println(err)
-	}
-
-	scanner := bufio.NewScanner(file)
+func ReadLines() []string {
+	scanner := bufio.NewScanner(os.Stdin)
 	var lines []string
 	for scanner.Scan() {
 		lines = append(lines, scanner.Text())
