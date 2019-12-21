@@ -14,6 +14,8 @@ type Computer struct {
 	ip, relativeBase, id int
 	mem                  []int
 	input, output        chan int
+
+	Waiting chan bool
 }
 
 /*IComputer is used for testing mocks*/
@@ -34,7 +36,15 @@ func NewComputer(instructions []int, id int) *Computer {
 	// Memory space should be much larger than the instruction size
 	memory := make([]int, len(instructions)*memSpaceMultiplier)
 	copy(memory, instructions)
-	return &Computer{0, 0, id, memory, make(chan int, 1), make(chan int)}
+	return &Computer{
+		0,
+		0,
+		id,
+		memory,
+		make(chan int, 1),
+		make(chan int),
+		make(chan bool, 1),
+	}
 }
 
 /*Next executes the next instruction, and returns the next output, if any */
@@ -86,6 +96,7 @@ func (c *Computer) Next() error {
 		c.mem[arg3] = arg1 * arg2
 		c.ip += 4
 	case 3:
+		c.Waiting <- true
 		c.mem[arg1] = c.requestInput()
 		c.ip += 2
 	case 4:

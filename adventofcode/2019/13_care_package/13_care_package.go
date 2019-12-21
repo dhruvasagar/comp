@@ -1,9 +1,8 @@
 package main
 
 import (
-	"bufio"
+	"errors"
 	"fmt"
-	"os"
 
 	"github.com/dhruvasagar/adventofcode/2019/util"
 )
@@ -25,6 +24,10 @@ type Tile struct {
 }
 
 func (t Tile) String() string {
+	return fmt.Sprintf("x:%d,y:%d,tileID:%d", t.x, t.y, t.tileID)
+}
+
+func (t Tile) render() string {
 	switch t.tileID {
 	case empty:
 		return " "
@@ -40,12 +43,21 @@ func (t Tile) String() string {
 	return ""
 }
 
-type Game []Tile
+func (t Tile) key() string {
+	return fmt.Sprintf("%d,%d", t.x, t.y)
+}
+
+type Game struct {
+	score int
+	tiles []Tile
+
+	tilesMap      map[string]Tile
+	tilesIndexMap map[string]int
+}
 
 func (g Game) String() string {
 	var minX, maxX, minY, maxY int
-	tileCache := make(map[string]Tile)
-	for _, tile := range g {
+	for _, tile := range g.tiles {
 		if minX > tile.x {
 			minX = tile.x
 		}
@@ -58,93 +70,142 @@ func (g Game) String() string {
 		if maxY < tile.y {
 			maxY = tile.y
 		}
-		key := fmt.Sprintf("%d,%d", tile.x, tile.y)
-		tileCache[key] = tile
 	}
 
-	game := ""
+	gs := ""
 	for y := minY; y <= maxY; y++ {
 		for x := minX; x <= maxX; x++ {
 			key := fmt.Sprintf("%d,%d", x, y)
-			if tile, ok := tileCache[key]; ok {
-				game += fmt.Sprintf("%s", tile)
+			if tile, ok := g.tilesMap[key]; ok {
+				gs += fmt.Sprintf("%s", tile.render())
 			}
 		}
-		game += "\n"
+		gs += "\n"
 	}
-	return game
+	gs += "-------------\n"
+	gs += fmt.Sprintf(" Score: %d\n", g.score)
+	gs += "-------------\n"
+	return gs
 }
 
-func part1(instructions []int) {
+func (g Game) getTile(tileID TileID) Tile {
+	for _, tile := range g.tiles {
+		if tile.tileID == tileID {
+			return tile
+		}
+	}
+	return Tile{}
+}
+
+func part1(instructions []int) Game {
 	computer := util.NewComputer(instructions, 1)
 	defer computer.Close()
 	go computer.Run()
 	outputs := computer.PollResult()
 
 	tileSize := 3
-	game := Game{}
+	game := Game{
+		tiles:         []Tile{},
+		tilesMap:      make(map[string]Tile),
+		tilesIndexMap: make(map[string]int),
+	}
 	for i := 0; i < len(outputs); i += tileSize {
-		tile := Tile{
-			x:      outputs[i],
-			y:      outputs[i+1],
-			tileID: TileID(outputs[i+2]),
+		x := outputs[i]
+		y := outputs[i+1]
+		tileID := outputs[i+2]
+		if x == -1 && y == 0 {
+			game.score = tileID
+		} else {
+			tile := Tile{
+				x:      x,
+				y:      y,
+				tileID: TileID(tileID),
+			}
+			game.tiles = append(game.tiles, tile)
+			key := fmt.Sprintf("%d,%d", x, y)
+			game.tilesMap[key] = tile
+			game.tilesIndexMap[key] = len(game.tiles) - 1
 		}
-		game = append(game, tile)
 	}
 	fmt.Printf("%+v\n", game)
 
 	blockCount := 0
-	for _, tile := range game {
+	for _, tile := range game.tiles {
 		if tile.tileID == block {
 			blockCount++
 		}
 	}
 	fmt.Println(blockCount)
+	return game
 }
 
-func part2(instructions []int) {
+var (
+	gameReadError = errors.New("Error reading game from computer, possibly ended")
+)
+
+type joystick int
+
+const (
+	left = iota - 1
+	neutral
+	right
+)
+
+func (game Game) play(computer *util.Computer) {
+	for {
+		select {
+		case <-computer.Waiting:
+			ballTile := game.getTile(ball)
+			paddleTile := game.getTile(paddle)
+			if ballTile.x < paddleTile.x {
+				computer.Type(int(left))
+			} else if ballTile.x > paddleTile.x {
+				computer.Type(int(right))
+			} else {
+				computer.Type(int(neutral))
+			}
+		default:
+			x, ok := computer.Read()
+			if !ok {
+				break
+			}
+			y, ok := computer.Read()
+			if !ok {
+				break
+			}
+			tileID, ok := computer.Read()
+			if !ok {
+				break
+			}
+			if x == -1 && y == 0 {
+				// Scoreboard
+				game.score = tileID
+			} else {
+				tile := Tile{
+					x:      x,
+					y:      y,
+					tileID: TileID(tileID),
+				}
+				tileIndex := game.tilesIndexMap[tile.key()]
+				game.tiles[tileIndex] = tile
+				game.tilesMap[tile.key()] = tile
+			}
+		}
+		fmt.Println(game)
+	}
+}
+
+func part2(instructions []int, game Game) {
 	instructions[0] = 2
 	computer := util.NewComputer(instructions, 2)
 	defer computer.Close()
 	go computer.Run()
-
-	scanner := bufio.NewScanner(os.Stdin)
-	keyboard := make(chan string)
-
-	go func() {
-		for scanner.Scan() {
-			key := scanner.Text()
-			keycode := 0
-			if key == "l" {
-				keycode = -1
-			} else if key == "r" {
-				keycode = 1
-			}
-			computer.Type(keycode)
-		}
-	}()
-
-	go func() {
-		game := Game{}
-		for {
-			x, ok := c.Read()
-			if !ok {
-				break
-			}
-			y, ok := c.Read()
-			if !ok {
-				break
-			}
-			z, ok := c.Read()
-			if !ok {
-				break
-			}
-		}
-	}()
+	game.play(computer)
+	fmt.Println(game.score)
 }
 
 func main() {
 	instructions := util.ReadIntcodeInstructions()
-	part1(instructions)
-	part2(instructions)
+	game := part1(instructions)
+	part2(instructions, game)
 }
