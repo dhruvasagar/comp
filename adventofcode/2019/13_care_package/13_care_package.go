@@ -3,8 +3,10 @@ package main
 import (
 	"errors"
 	"fmt"
+	"time"
 
 	"github.com/dhruvasagar/adventofcode/2019/util"
+	"github.com/gosuri/uilive"
 )
 
 type TileID int
@@ -97,14 +99,24 @@ func (g Game) getTile(tileID TileID) Tile {
 	return Tile{}
 }
 
-func part1(instructions []int) Game {
+func (g Game) countTiles(tileID TileID) int {
+	blockCount := 0
+	for _, tile := range g.tiles {
+		if tile.tileID == block {
+			blockCount++
+		}
+	}
+	return blockCount
+}
+
+func part1(instructions []int) *Game {
 	computer := util.NewComputer(instructions, 1)
 	defer computer.Close()
 	go computer.Run()
 	outputs := computer.PollResult()
 
 	tileSize := 3
-	game := Game{
+	game := &Game{
 		tiles:         []Tile{},
 		tilesMap:      make(map[string]Tile),
 		tilesIndexMap: make(map[string]int),
@@ -128,14 +140,7 @@ func part1(instructions []int) Game {
 		}
 	}
 	fmt.Printf("%+v\n", game)
-
-	blockCount := 0
-	for _, tile := range game.tiles {
-		if tile.tileID == block {
-			blockCount++
-		}
-	}
-	fmt.Println(blockCount)
+	fmt.Println(game.countTiles(block))
 	return game
 }
 
@@ -151,12 +156,15 @@ const (
 	right
 )
 
-func (game Game) play(computer *util.Computer) {
+func (g *Game) play(computer *util.Computer) {
+	writer := uilive.New()
+	writer.Start()
+	defer writer.Stop()
 	for {
 		select {
 		case <-computer.Waiting:
-			ballTile := game.getTile(ball)
-			paddleTile := game.getTile(paddle)
+			ballTile := g.getTile(ball)
+			paddleTile := g.getTile(paddle)
 			if ballTile.x < paddleTile.x {
 				computer.Type(int(left))
 			} else if ballTile.x > paddleTile.x {
@@ -179,29 +187,33 @@ func (game Game) play(computer *util.Computer) {
 			}
 			if x == -1 && y == 0 {
 				// Scoreboard
-				game.score = tileID
+				g.score = tileID
 			} else {
 				tile := Tile{
 					x:      x,
 					y:      y,
 					tileID: TileID(tileID),
 				}
-				tileIndex := game.tilesIndexMap[tile.key()]
-				game.tiles[tileIndex] = tile
-				game.tilesMap[tile.key()] = tile
+				tileIndex := g.tilesIndexMap[tile.key()]
+				g.tiles[tileIndex] = tile
+				g.tilesMap[tile.key()] = tile
 			}
 		}
-		fmt.Println(game)
+		fmt.Fprintln(writer, g)
+		time.Sleep(time.Millisecond * 5)
+		if g.countTiles(block) == 0 {
+			break
+		}
 	}
 }
 
-func part2(instructions []int, game Game) {
+func part2(instructions []int, game *Game) {
 	instructions[0] = 2
 	computer := util.NewComputer(instructions, 2)
 	defer computer.Close()
 	go computer.Run()
 	game.play(computer)
-	fmt.Println(game.score)
+	fmt.Println("Score: ", game.score)
 }
 
 func main() {
