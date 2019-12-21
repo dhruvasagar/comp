@@ -102,7 +102,7 @@ func (g Game) getTile(tileID TileID) Tile {
 func (g Game) countTiles(tileID TileID) int {
 	blockCount := 0
 	for _, tile := range g.tiles {
-		if tile.tileID == block {
+		if tile.tileID == tileID {
 			blockCount++
 		}
 	}
