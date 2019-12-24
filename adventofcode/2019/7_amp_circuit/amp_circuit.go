@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 
-	"github.com/dhruvasagar/adventofcode/2019/util"
+	"github.com/dhruvasagar/comp/adventofcode/2019/util"
 )
 
 /*Silver - Part 1 */

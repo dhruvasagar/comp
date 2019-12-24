@@ -7,7 +7,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/dhruvasagar/adventofcode/2019/util"
+	"github.com/dhruvasagar/comp/adventofcode/2019/util"
 )
 
 type Position struct {

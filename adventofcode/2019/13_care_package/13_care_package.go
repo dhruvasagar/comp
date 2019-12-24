@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/dhruvasagar/adventofcode/2019/util"
+	"github.com/dhruvasagar/comp/adventofcode/2019/util"
 	"github.com/gosuri/uilive"
 )
 

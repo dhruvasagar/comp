@@ -1,4 +1,4 @@
-module github.com/dhruvasagar/adventofcode/2019
+module github.com/dhruvasagar/comp/adventofcode/2019
 
 go 1.12
 
