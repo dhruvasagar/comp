@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+	"sort"
 	"strconv"
 	"strings"
 )
@@ -21,8 +22,10 @@ func logCase(num int, out string) {
 	fmt.Printf("Case #%d: %s\n", num, out)
 }
 
-type Interval struct {
-	start, end int
+type Activity struct {
+	start int
+	end   int
+	index int
 }
 
 func max(a, b int) int {
@@ -39,21 +42,22 @@ func min(a, b int) int {
 	return b
 }
 
-func (i Interval) hasOverlap(i2 Interval) bool {
-	return i.start == i2.start || i.end == i2.end ||
-		(i.start < i2.start && i.end > i2.start) ||
-		(i2.start < i.start && i2.end > i.start)
+func (i Activity) hasOverlap(i2 Activity) bool {
+	return max(i.start, i2.start) < min(i.end, i2.end)
 }
 
-type Schedule []Interval
+type Schedule []Activity
 
-func (s Schedule) hasOverlap(i Interval) bool {
-	for _, sc := range s {
-		if sc.hasOverlap(i) {
-			return true
-		}
+// Sort Interface
+func (s Schedule) Len() int           { return len(s) }
+func (s Schedule) Swap(i, j int)      { s[i], s[j] = s[j], s[i] }
+func (s Schedule) Less(i, j int) bool { return s[i].start < s[j].start }
+
+func (s Schedule) hasOverlap(i Activity) bool {
+	if len(s) == 0 {
+		return false
 	}
-	return false
+	return s[len(s)-1].hasOverlap(i)
 }
 
 type Case struct {
@@ -62,22 +66,24 @@ type Case struct {
 }
 
 func (c Case) assignActivities() string {
-	as := ""
 	cs := Schedule{}
 	js := Schedule{}
+	sort.Sort(c.schedule)
+	as := make([]string, len(c.schedule))
+
 	for _, s := range c.schedule {
 		if cs.hasOverlap(s) {
 			if js.hasOverlap(s) {
 				return "IMPOSSIBLE"
 			}
 			js = append(js, s)
-			as += "J"
+			as[s.index] = "J"
 		} else {
 			cs = append(cs, s)
-			as += "C"
+			as[s.index] = "C"
 		}
 	}
-	return as
+	return strings.Join(as, "")
 }
 
 func (c Case) String() string {
@@ -98,10 +104,11 @@ func parseInput(lines []string) Input {
 		for j := 0; j < c.n; j++ {
 			is := lines[i+2]
 			isa := strings.Split(is, " ")
-			interval := Interval{}
-			interval.start, _ = strconv.Atoi(isa[0])
-			interval.end, _ = strconv.Atoi(isa[1])
-			c.schedule = append(c.schedule, interval)
+			activity := Activity{}
+			activity.start, _ = strconv.Atoi(isa[0])
+			activity.end, _ = strconv.Atoi(isa[1])
+			activity.index = j
+			c.schedule = append(c.schedule, activity)
 			i++
 		}
 		r.cases = append(r.cases, c)
