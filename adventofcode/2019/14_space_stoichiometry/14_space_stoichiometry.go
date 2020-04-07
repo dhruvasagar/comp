@@ -143,6 +143,38 @@ func (c ChainReaction) oreNeeded(chemical Chemical) int {
 	return res
 }
 
+type ChemicalTree struct {
+	node     Chemical
+	pnode    Chemical
+	children []ChemicalTree
+}
+
+func (ct ChemicalTree) quantity() int {
+	quantity := 0
+	if len(ct.children) == 0 {
+		return ct.node.quantity
+	}
+	for _, child := range ct.children {
+		if ct.node.quantity < child.pnode.quantity {
+			quantity += child.pnode.quantity
+		} else {
+			quantity += int(math.Ceil(float64(child.quantity())/float64(child.pnode.quantity))) * ct.node.quantity
+		}
+	}
+	return quantity
+}
+
+func NewChemicalTree(cr ChainReaction, root Chemical) ChemicalTree {
+	ct := ChemicalTree{node: root}
+	reaction := cr.prMap[root.signature()]
+	for _, r := range reaction.reactants {
+		cct := NewChemicalTree(cr, r)
+		cct.pnode = reaction.product
+		ct.children = append(ct.children, cct)
+	}
+	return ct
+}
+
 func parseChemical(chemical string) Chemical {
 	qn := strings.Split(chemical, " ")
 	quantity, _ := strconv.Atoi(qn[0])
@@ -184,5 +216,6 @@ func parseInput(lines []string) ChainReaction {
 
 func main() {
 	chainReaction := parseInput(util.ReadLines())
-	fmt.Println(chainReaction)
+	chemicalTree := NewChemicalTree(chainReaction, Chemical{fuel, 1})
+	fmt.Println(chemicalTree)
 }
