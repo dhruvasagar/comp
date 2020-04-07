@@ -1,5 +1,6 @@
 #include<iostream>
 #include<vector>
+#include<algorithm>
 using namespace std;
 
 bool has_overlap(vector<int> a, vector<int> b)
@@ -25,10 +26,12 @@ bool has_overlap_with(vector<vector<int> >& activities, vector<int> activity)
 
 string assign_activities(vector<vector<int> > activities)
 {
-  string as = "";
   int n = activities.size();
+  vector<string> as(n);
   vector<vector<int> > cs(n);
   vector<vector<int> > js(n);
+  sort(activities.begin(), activities.end());
+
   for (int i = 0; i < n; ++i) {
     vector<int> activity = activities[i];
     if (has_overlap_with(cs, activity)) {
@@ -36,13 +39,17 @@ string assign_activities(vector<vector<int> > activities)
         return "IMPOSSIBLE";
       }
       js.push_back(activity);
-      as += "J";
+      as[activity[2]] = "J";
     } else {
       cs.push_back(activity);
-      as += "C";
+      as[activity[2]] = "C";
     }
   }
-  return as;
+  string s = "";
+  for (int i = 0; i < n; ++i) {
+    s += as[i];
+  }
+  return s;
 }
 
 void test_case()
@@ -51,9 +58,10 @@ void test_case()
   scanf("%d", &n);
   vector<vector<int> > activities(n);
   for (int i = 0; i < n; ++i) {
-    vector<int> activity(2);
+    vector<int> activity(3);
     scanf("%d", &activity[0]);
     scanf("%d", &activity[1]);
+    activity[2] = i;
     activities[i] = activity;
   }
   cout << assign_activities(activities) << endl;
