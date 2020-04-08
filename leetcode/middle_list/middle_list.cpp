@@ -25,23 +25,21 @@ Node* middleNode(Node* head)
   int cnt = 1;
   while (ptr->next != NULL) {
     cnt++;
-    if(cnt%2==0){
+    if(cnt % 2 == 0)
       mid = mid->next;
-    }
     ptr = ptr->next;
   }
   return mid;
 }
 
-void log(Node* node)
+void logList(Node* node)
 {
   Node *ptr = node;
   cout << "[";
   while (ptr != NULL) {
     cout << ptr->val;
-    if (ptr->next != NULL) {
+    if (ptr->next != NULL)
       cout << ",";
-    }
     ptr = ptr->next;
   }
   cout << "]" << endl;
@@ -50,7 +48,7 @@ void log(Node* node)
 int main(int argc, char *argv[])
 {
   int arr1[5] = {1,2,3,4,5}, arr2[6] = {1,2,3,4,5,6};
-  log(middleNode(createLinkedList(5, arr1)));
-  log(middleNode(createLinkedList(6, arr2)));
+  logList(middleNode(createLinkedList(5, arr1)));
+  logList(middleNode(createLinkedList(6, arr2)));
   return 0;
 };
