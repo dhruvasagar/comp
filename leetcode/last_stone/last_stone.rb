@@ -9,7 +9,7 @@ def lastStoneWeight(stones)
     stones[0] = stones[0] - stones[1]
     stones = stones[0...1] + stones[2..-1] 
   end
-  p stones
+
   lastStoneWeight(stones)
 end
 
