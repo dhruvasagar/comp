@@ -5,7 +5,6 @@ import (
 )
 
 type TreeNode struct {
-	ID    int
 	Val   int
 	Left  *TreeNode
 	Right *TreeNode
@@ -28,11 +27,11 @@ func (t *TreeNode) String() string {
 }
 
 func NewTree(values []int) *TreeNode {
-	tree := &TreeNode{ID: 1, Val: values[0]}
+	tree := &TreeNode{Val: values[0]}
 	node := tree
 	fmt.Println("full:", IsFull(node))
 	for i := 1; i < len(values); i++ {
-		cnode := &TreeNode{ID: i + 1, Val: values[i]}
+		cnode := &TreeNode{Val: values[i]}
 		for IsFull(node) {
 			if node.Left != nil {
 				node = node.Left
@@ -63,30 +62,25 @@ func min(a, b int) int {
 	return b
 }
 
-func height(t *TreeNode) int {
+func diameter(t *TreeNode) (int, int) {
 	if t == nil {
-		return 0
+		return 0, 0
 	}
 
-	return 1 + max(height(t.Left), height(t.Right))
+	ldiam, lheight := diameter(t.Left)
+	rdiam, rheight := diameter(t.Right)
+
+	diam := max(max(ldiam, rdiam), lheight+rheight)
+	return diam, 1 + max(lheight, rheight)
 }
 
-func diameter(t *TreeNode) int {
-	if t == nil {
-		return 0
-	}
-
-	lheight := height(t.Left)
-	rheight := height(t.Right)
-
-	ldiameter := diameter(t.Left)
-	rdiameter := diameter(t.Right)
-
-	return max(lheight+rheight, max(ldiameter, rdiameter))
+func diameterOfBinaryTree(t *TreeNode) int {
+	diam, _ := diameter(t)
+	return diam
 }
 
 func main() {
 	tree := NewTree([]int{1, 2, 3, 4, 5})
 	fmt.Println(tree)
-	fmt.Println(diameter(tree))
+	fmt.Println(diameterOfBinaryTree(tree))
 }
