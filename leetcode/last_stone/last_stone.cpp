@@ -1,25 +1,37 @@
 #include<iostream>
 #include<vector>
+#include<queue>
 using namespace std;
+
+template<typename T> void print_queue(T q) {
+  while(!q.empty()) {
+    std::cout << q.top() << " ";
+    q.pop();
+  }
+  std::cout << '\n';
+}
 
 int lastStoneWeight(vector<int>& stones)
 {
-  if (stones.size() == 0) {
+  priority_queue<int> q;
+  for (int s : stones)
+    q.push(s);
+
+  while (q.size() > 1) {
+    int x = q.top();
+    q.pop();
+    int y = q.top();
+    q.pop();
+
+    if (x > y) {
+      q.push(x - y);
+    }
+  }
+
+  if (q.empty())
     return 0;
-  }
-  if (stones.size() == 1) {
-    return stones[1];
-  }
 
-  sort(stones.begin(), stones.end(), greater<int>());
-  if (stones[0] == stones[1]) {
-    stones.erase(stones.begin(), stones.begin()+2);
-  } else {
-    stones[0] = stones[0]-stones[1];
-    stones.erase(stones.begin()+1);
-  }
-
-  return lastStoneWeight(stones);
+  return q.top();
 }
 
 int main(int argc, char *argv[])
