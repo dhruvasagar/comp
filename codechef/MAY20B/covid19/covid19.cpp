@@ -3,15 +3,8 @@
 #include<climits>
 using namespace std;
 
-
-void test_case() {
+void solve(int N, int X[N]) {
   const int distance = 2;
-  int N;
-  cin >> N;
-  int X[N];
-  for (int i = 0; i < N; ++i) {
-    cin >> X[i];
-  }
   int minGroupSize = INT_MAX, maxGroupSize = 1, groupSize = 1;
   vector<int> groups;
   groups.push_back(X[0]);
@@ -30,6 +23,16 @@ void test_case() {
     maxGroupSize = max(maxGroupSize, groupSize);
   }
   cout << minGroupSize << " " << maxGroupSize << endl;
+}
+
+void test_case() {
+  int N;
+  cin >> N;
+  int X[N];
+  for (int i = 0; i < N; ++i) {
+    cin >> X[i];
+  }
+  solve(N, X);
 }
 
 int main() {
