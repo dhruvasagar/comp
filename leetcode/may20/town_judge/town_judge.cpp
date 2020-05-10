@@ -33,6 +33,8 @@ int findJudge(int N, vector<vector<int>>& trust) {
   for (vector<int> vt : trust) {
     tm[vt[0]] = vt[1];
   }
+  // Since a person can trust multiple people, we ensure our trust map only
+  // retains trust relationships that do not violate rule #1.
   for (vector<int> vt : trust) {
     if (tm.find(vt[1]) == tm.end()) {
       tm[vt[0]] = vt[1];
