@@ -40,7 +40,7 @@ int findJudge(int N, vector<vector<int>>& trust) {
       tm[vt[0]] = vt[1];
     }
   }
-  printMap(tm);
+  /* printMap(tm); */
   for (int i = 1; i <= N; ++i) {
     if (tm.find(i) != tm.end()) // i violates rule #1, so can't be judge
       continue;
