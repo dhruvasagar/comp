@@ -27,8 +27,7 @@ def pass_valid2?(policy, pass)
     (at_pos(pass, positions[0]) != char && at_pos(pass, positions[1]) == char)
 end
 
-def part1
-  inputs = read_input
+def part1(inputs)
   inputs.reduce(0) do |s, input|
     policy, pass = input.split(':')
     s += 1 if pass_valid?(policy, pass.strip)
@@ -36,8 +35,7 @@ def part1
   end
 end
 
-def part2
-  inputs = read_input
+def part2(inputs)
   inputs.reduce(0) do |s, input|
     policy, pass = input.split(':')
     s += 1 if pass_valid2?(policy, pass.strip)
@@ -45,5 +43,6 @@ def part2
   end
 end
 
-puts part1
-puts part2
+inputs = read_input
+puts part1(inputs)
+puts part2(inputs)
