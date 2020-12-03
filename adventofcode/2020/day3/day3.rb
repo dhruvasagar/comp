@@ -16,12 +16,11 @@ def tree_count(terrain, slope)
   col_max = terrain[0].length - 1
   while row < row_max
     if col + slope[0] > col_max # wrap around
-      row += slope[1]
       col = slope[0] - (col_max - col) - 1
     else
       col += slope[0]
-      row += slope[1]
     end
+    row += slope[1]
     break if row > row_max
 
     tree_count += 1 if terrain[row][col] == TREE
