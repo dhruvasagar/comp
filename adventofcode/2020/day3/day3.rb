@@ -6,20 +6,14 @@ end
 
 TREE = '#'
 OPEN = '.'
-SLOPES = [3, 1]
-
-def square(spot)
-  if spot == TREE
-    'X'
-  else
-    'O'
-  end
-end
+SLOPES = [3, 1].freeze
 
 def tree_count(terrain, slope)
   tree_count = 0
-  row, col = 0, 0
-  row_max, col_max = terrain.length-1, terrain[0].length-1
+  row = 0
+  col = 0
+  row_max = terrain.length - 1
+  col_max = terrain[0].length - 1
   while row < row_max
     if col + slope[0] > col_max # wrap around
       row += slope[1]
@@ -29,6 +23,7 @@ def tree_count(terrain, slope)
       row += slope[1]
     end
     break if row > row_max
+
     tree_count += 1 if terrain[row][col] == TREE
   end
   tree_count
@@ -43,7 +38,7 @@ ALL_SLOPES = [
   [3, 1],
   [5, 1],
   [7, 1],
-  [1, 2],
+  [1, 2]
 ].freeze
 
 def part2(terrain)
