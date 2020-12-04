@@ -7,32 +7,32 @@ end
 FIELDS = {
   byr: lambda { |val|
     val = val.to_i
-    val > 999 && val >= 1920 && val <= 2002
+    (1920..2002).include?(val)
   },
   cid: ->(_) { true },
   ecl: ->(val) { %w[amb blu brn gry grn hzl oth].include?(val) },
   eyr: lambda { |val|
     val = val.to_i
-    val > 999 && val >= 2020 && val <= 2030
+    (2020..2030).include?(val)
   },
-  hcl: ->(val) { val.match(/#([\da-f]{6})/) },
+  hcl: ->(val) { val.match(/^#([\da-f]{6})$/) },
   hgt: lambda { |val|
-    m = val.match(/^(\d+)(cm|in)/)
+    m = val.match(/^(\d+)(cm|in)$/)
     return false unless m
 
     hgt = m[1].to_i
     dim = m[2]
     if dim == 'cm'
-      hgt >= 150 && hgt <= 193
+      (150..193).include?(hgt)
     else
-      hgt >= 59 && hgt <= 76
+      (59..76).include?(hgt)
     end
   },
   iyr: lambda { |val|
     val = val.to_i
-    val > 999 && val >= 2010 && val <= 2020
+    (2010..2020).include?(val)
   },
-  pid: ->(val) { val.size == 9 }
+  pid: ->(val) { val.match(/^\d{9}$/) }
 }.freeze
 
 EXCEPTIONS = [
