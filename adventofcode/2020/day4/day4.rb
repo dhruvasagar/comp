@@ -5,16 +5,10 @@ def read_input
 end
 
 FIELDS = {
-  byr: lambda { |val|
-    val = val.to_i
-    (1920..2002).include?(val)
-  },
+  byr: ->(val) { (1920..2002).include?(val.to_i) },
   cid: ->(_) { true },
   ecl: ->(val) { %w[amb blu brn gry grn hzl oth].include?(val) },
-  eyr: lambda { |val|
-    val = val.to_i
-    (2020..2030).include?(val)
-  },
+  eyr: ->(val) { (2020..2030).include?(val.to_i) },
   hcl: ->(val) { val.match(/^#([\da-f]{6})$/) },
   hgt: lambda { |val|
     m = val.match(/^(\d+)(cm|in)$/)
@@ -28,10 +22,7 @@ FIELDS = {
       (59..76).include?(hgt)
     end
   },
-  iyr: lambda { |val|
-    val = val.to_i
-    (2010..2020).include?(val)
-  },
+  iyr: ->(val) { (2010..2020).include?(val.to_i) },
   pid: ->(val) { val.match(/^\d{9}$/) }
 }.freeze
 
