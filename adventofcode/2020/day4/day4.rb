@@ -49,7 +49,7 @@ end
 
 def valid_passport?(passport)
   missing = FIELDS.keys.map(&:to_s) - passport.keys.sort
-  missing.empty? || missing == EXCEPTIONS
+  missing.empty? || (missing - EXCEPTIONS).empty?
 end
 
 def valid_passport2?(passport)
