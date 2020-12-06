@@ -16,12 +16,7 @@ end
 
 def part2(answers)
   answers.map do |answer|
-    as = answer.split
-    comm_char = as.first
-    as.each do |a|
-      comm_char = (comm_char.scan(/./) & a.scan(/./)).join
-    end
-    comm_char.size
+    answer.split.map(&:chars).reduce(&:&).size
   end.reduce(:+)
 end
 
