@@ -4,24 +4,14 @@ def read_input
   ARGF.readlines
 end
 
-INPUT_RANGE = 1..3
-OUTLET_JOLT = 0
-DEVICE_JOlTAGE_DIFF = 3
-
 def part1(joltages)
-  diff1 = 0
-  diff3 = 1
-  sjolt = OUTLET_JOLT
-  joltages.each do |jolt|
-    diff = jolt - sjolt
-    if diff == 1
-      diff1 += 1
-    elsif diff == 3
-      diff3 += 1
-    end
-    sjolt = jolt
-  end
-  diff1 * diff3
+  jolts = [0] + joltages + [joltages.max + 3]
+  jolts.each_cons(2)
+       .map { |j1, j2| j2 - j1 }
+       .group_by { |j| j }
+       .values
+       .map(&:length)
+       .reduce(:*)
 end
 
 def part2(jolts)
@@ -31,7 +21,6 @@ def part2(jolts)
   jolts.sort.each do |j|
     h[j] = ((j - 3)...j).map { |jp| h[jp] }.compact.sum
   end
-  p h
   h.values.last
 end
 
