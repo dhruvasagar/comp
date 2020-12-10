@@ -18,7 +18,7 @@ def part2(jolts)
   # tribonacci sequence (sum of previous 3) applied to only values that
   # exist in jolts
   h = { 0 => 1 }
-  jolts.sort.each do |j|
+  jolts.each do |j|
     h[j] = ((j - 3)...j).map { |jp| h[jp] }.compact.sum
   end
   h.values.last
