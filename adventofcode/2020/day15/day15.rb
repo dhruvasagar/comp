@@ -7,39 +7,34 @@ end
 PART1_LIMIT = 2020
 PART2_LIMIT = 30_000_000
 
-# h : history for most recent occurence
-# hh : history for previous occurence
-def next_number(index, numbers, h, hh)
+# ph : history of index for previous to last occurence of number
+# lh : history of index for last occurence of number
+def next_number(num, index, numbers, ph, lh)
   if index < numbers.size
     num = numbers[index]
-    hh[num] = index
+    ph[num] = index
     return num
   end
 
-  num = numbers[index - 1]
-  if h[num] # second repeat
-    nnum = h[num] - hh[num]
-    if hh[nnum]
-      h[nnum] = index
-    else
-      hh[nnum] = index
-    end
-    hh[num] = index - 1
+  if lh[num] # second repeat
+    nnum = lh[num] - ph[num]
+    ph[nnum] ? lh[nnum] = index : ph[nnum] = index
+    ph[num] = index - 1
     num = nnum
   else
     num = 0
-    h[num] = index # works because we know 0 has occurred before
+    lh[num] = index # works because we know 0 has occurred before
   end
-  numbers << num
   num
 end
 
 def part(numbers, limit)
   index = 0
-  h = {}
-  hh = {}
+  lh = {}
+  ph = {}
+  num = numbers.first
   loop do
-    num = next_number(index, numbers, h, hh)
+    num = next_number(num, index, numbers, ph, lh)
     return num if index + 1 == limit
 
     index += 1
