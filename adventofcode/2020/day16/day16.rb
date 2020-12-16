@@ -46,7 +46,7 @@ def map_fields(field_rules, valid_tickets)
   reduce_maps(maps)
 end
 
-def part2(field_rules, your_tickets, nearby_tickets)
+def part2(field_rules, your_ticket, nearby_tickets)
   valid_tickets = nearby_tickets.reject do |nv|
     nv.any? { |nvi| !valid?(field_rules, nvi) }
   end
@@ -54,7 +54,7 @@ def part2(field_rules, your_tickets, nearby_tickets)
   fields
     .keys
     .select { |k| k =~ /departure/ }
-    .map { |k| your_tickets[fields[k]] }
+    .map { |k| your_ticket[fields[k]] }
     .reduce(:*)
 end
 
@@ -66,10 +66,10 @@ field_rules = sections[0]
               .to_h
 field_rules.each { |k, v| field_rules[k] = rule_ranges(v) }
 
-your_tickets = sections[1]
-               .split(":\n")[1]
-               .split(',')
-               .map(&:to_i)
+your_ticket = sections[1]
+              .split(":\n")[1]
+              .split(',')
+              .map(&:to_i)
 
 nearby_tickets = sections[2]
                  .split(":\n")[1]
@@ -77,4 +77,4 @@ nearby_tickets = sections[2]
                  .map { |r| r.split(',').map(&:to_i) }
 
 p part1(field_rules, nearby_tickets)
-p part2(field_rules, your_tickets, nearby_tickets)
+p part2(field_rules, your_ticket, nearby_tickets)
