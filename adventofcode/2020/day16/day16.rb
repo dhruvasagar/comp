@@ -5,12 +5,12 @@ def read_input
 end
 
 def rule_ranges(rule)
-  rule.split(' or ').map { |r| r.split('-').map(&:to_i) }
+  rule.split(' or ').map { |r| r.split('-').map(&:to_i) }.map { |r| r[0]..r[1] }
 end
 
 def valid?(field_rules, value)
   field_rules.values.any? do |rule|
-    rule_ranges(rule).any? { |v1, v2| value >= v1 && value <= v2 }
+    rule.any? { |r| r.include?(value) }
   end
 end
 
@@ -36,9 +36,9 @@ end
 def map_fields(field_rules, valid_tickets)
   maps = valid_tickets.transpose.map do |nv|
     nv.map do |nvi|
-      field_rules.map do |name, rule|
-        name if rule_ranges(rule)
-                .select { |v1, v2| nvi >= v1 && nvi <= v2 }
+      field_rules.map do |name, ranges|
+        name if ranges
+                .select { |r| r.include?(nvi) }
                 .size == 1
       end
     end.reduce(:&)
@@ -59,11 +59,18 @@ def part2(field_rules, your_tickets, nearby_tickets)
 end
 
 sections = read_input.split("\n\n")
+
 field_rules = sections[0]
               .split("\n")
               .map { |r| r.split(':').map(&:strip) }
               .to_h
-your_tickets = sections[1].split(":\n")[1].split(',').map(&:to_i)
+field_rules.each { |k, v| field_rules[k] = rule_ranges(v) }
+
+your_tickets = sections[1]
+               .split(":\n")[1]
+               .split(',')
+               .map(&:to_i)
+
 nearby_tickets = sections[2]
                  .split(":\n")[1]
                  .split
