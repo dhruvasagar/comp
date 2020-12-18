@@ -72,7 +72,7 @@ func evaluate(tokens string) int {
 		}
 
 		if isDigit(tokens[i]) {
-			num := int(0)
+			num := 0
 			for ; i < len(tokens) && isDigit(tokens[i]); i++ {
 				num = num*10 + int(tokens[i]-'0')
 			}
