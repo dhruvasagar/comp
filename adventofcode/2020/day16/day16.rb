@@ -15,10 +15,9 @@ def valid?(field_rules, value)
 end
 
 def invalid_sum(field_rules, nearby_tickets)
-  nearby_tickets.reduce(0) do |sum, nv|
-    vs = nv.reject { |nvi| valid?(field_rules, nvi) }
-    sum + vs.sum
-  end
+  nearby_tickets.map do |nv|
+    nv.reject { |nvi| valid?(field_rules, nvi) }.sum
+  end.sum
 end
 
 def part1(field_rules, nearby_tickets)
