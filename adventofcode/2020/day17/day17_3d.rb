@@ -49,9 +49,10 @@ end
 
 def expand(cubes)
   min, max = cubes.map(&:x).minmax
+  minz, maxz = cubes.map(&:z).minmax
   (min-1).upto(max+1).each do |i|
     (min-1).upto(max+1).each do |j|
-      (min-1).upto(max+1).each do |k|
+      (minz-1).upto(maxz+1).each do |k|
         key = cache_key(i, j, k)
         next if $cube_map[key]
 
