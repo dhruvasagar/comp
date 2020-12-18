@@ -34,6 +34,14 @@ func evalOp(a, b int, op rune) int {
 	return 0
 }
 
+func evalOpOnStack(ops *Stack, vals *Stack) {
+	val2 := vals.pop()
+	val1 := vals.pop()
+	op := ops.pop()
+
+	vals.push(evalOp(val1, val2, rune(op)))
+}
+
 type Stack struct {
 	values []int
 }
@@ -86,11 +94,7 @@ func evaluate(tokens string) int {
 
 		if tokens[i] == PARR {
 			for !ops.empty() && ops.top() != PARL {
-				val2 := vals.pop()
-				val1 := vals.pop()
-				op := ops.pop()
-
-				vals.push(evalOp(val1, val2, rune(op)))
+				evalOpOnStack(ops, vals)
 			}
 
 			if !ops.empty() {
@@ -100,11 +104,7 @@ func evaluate(tokens string) int {
 
 		if tokens[i] == ADD || tokens[i] == MUL {
 			for !ops.empty() && precedence(rune(ops.top())) >= precedence(rune(tokens[i])) {
-				val2 := vals.pop()
-				val1 := vals.pop()
-				op := ops.pop()
-
-				vals.push(evalOp(val1, val2, rune(op)))
+				evalOpOnStack(ops, vals)
 			}
 
 			ops.push(int(tokens[i]))
@@ -112,11 +112,7 @@ func evaluate(tokens string) int {
 	}
 
 	for !ops.empty() {
-		val2 := vals.pop()
-		val1 := vals.pop()
-		op := ops.pop()
-
-		vals.push(evalOp(val1, val2, rune(op)))
+		evalOpOnStack(ops, vals)
 	}
 
 	return vals.top()
