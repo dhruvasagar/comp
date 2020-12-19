@@ -1,0 +1,15 @@
+found:
+bbabbbbaabaabba
+babbbbaabbbbbabbbbbbaabaaabaaa
+bbbbbbbaaaabbbbaaabbabaaa
+bbbababbbbaaaaaaaabbababaaababaabab
+ababaaaaaabaaab
+ababaaaaabbbaba
+baabbaaaabbaaaababbaababb
+abbbbabbbbaaaababbbbbbaaaababb
+aaaaabbaabaaaaababaa
+
+missing:
+aaabbbbbbaaaabaababaabababbabaaabbababababaaa
+aaaabbaabbaaaaaaabbbabbbaaabbaabaaa
+aabbbbbaabbbaaaaaabbbbbababaaaaabbaaabba
