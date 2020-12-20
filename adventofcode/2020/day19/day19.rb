@@ -4,16 +4,6 @@ def read_input
   ARGF.read
 end
 
-def parse_rule(rule)
-  if rule =~ /"/
-    rule.gsub('"', '')
-  elsif rule =~ /^[\d\s]+$/
-    rule.split.map(&:to_i)
-  elsif rule =~ /\|/
-    rule.split(' | ').map { |r| parse_rule(r) }
-  end
-end
-
 def recur_regex(id, rule, rules)
   @recnt += 1
   "(?<e#{@recnt}>#{rule.map do |r|
@@ -54,6 +44,16 @@ end
 def rules_regex(id, rules)
   @recnt = 0
   Regexp.new("^#{rule_regex(id, rules)}$")
+end
+
+def parse_rule(rule)
+  if rule =~ /"/
+    rule.gsub('"', '')
+  elsif rule =~ /^[\d\s]+$/
+    rule.split.map(&:to_i)
+  elsif rule =~ /\|/
+    rule.split(' | ').map { |r| parse_rule(r) }
+  end
 end
 
 def parse_rules(lines)
