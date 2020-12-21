@@ -4,7 +4,7 @@ def read_input
   ARGF.readlines
 end
 
-REGEX = /^(.+?) \(contains (.+)\)$/.freeze
+ALLERGEN_REGEX = /^(.+?) \(contains (.+)\)$/.freeze
 
 def part1(ingredients, allergen_map)
   non_allergic = ingredients.flatten.uniq - allergen_map.values.flatten.uniq
@@ -15,18 +15,17 @@ end
 
 def part2(allergen_map)
   rmap = {}
-  allsortedarray = allergen_map.to_a
+  allsortedarray = allergen_map.to_a.sort_by { |_, v| v.size }
   until allsortedarray.empty?
-    allsortedarray.sort_by! { |_, v| v.size }
     ingredient, allergen = allsortedarray.shift
-    rmap[allergen.first] = ingredient
-    allsortedarray = allsortedarray.map { |k, v| [k, v - [allergen.first]] }
+    rmap[allergen[0]] = ingredient
+    allsortedarray = allsortedarray.map { |k, v| [k, v - [allergen[0]]] }
   end
   rmap.keys.sort_by { |i| rmap[i] }.join(',')
 end
 
 def parse_line(line, allergen_map)
-  m = REGEX.match(line.chomp)
+  m = ALLERGEN_REGEX.match(line.chomp)
   ingredients = m[1].split.map(&:strip)
   allergens = m[2].split(',').map(&:strip)
   allergens.each do |allergen|
