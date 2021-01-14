@@ -2,24 +2,16 @@ slice :: Int  -> [a] -> [a]
 slice index ns = bs ++ as
   where (bs, _:as) = splitAt index ns
 
-goodSplit :: [Int] -> Int -> Int -> Bool
-goodSplit ns k m = div amt 2 == m
-  where paid = slice k ns
-        amt = sum paid
-
-refund :: [Int] -> Int -> Int -> Int
-refund ns k m = m - share
+refund :: Int -> [Int] -> Int -> Maybe Int
+refund k ns m
+  | m > share = Just (m - share)
+  | otherwise = Nothing
   where items = slice k ns
         amt = sum items
         share = div amt 2
 
-billDiv :: [Int] -> Int -> Int -> String
-billDiv ns k m
-  | goodSplit ns k m = "Bon Appetit"
-  | otherwise = show $ refund ns k m
-
 solve :: [Int] -> String
-solve (n:k:nsm) = billDiv nums k m
+solve (_:k:nsm) = maybe "Bon Appetit" show $ refund k nums m
   where nums = init nsm
         m = last nsm
 
