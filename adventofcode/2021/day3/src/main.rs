@@ -17,7 +17,7 @@ fn to_dec(bits: Vec<i32>) -> i32 {
 }
 
 fn rate(bits: Vec<Vec<i32>>, major: bool) -> Vec<i32> {
-    let mut gamma: Vec<i32> = vec![];
+    let mut rate: Vec<i32> = vec![];
     let bsize = bits[0].len();
     for i in 0..bsize {
         let mut n0: i32 = 0;
@@ -30,12 +30,12 @@ fn rate(bits: Vec<Vec<i32>>, major: bool) -> Vec<i32> {
             }
         }
         if n0 > n1 {
-            gamma.push(if major { 0 } else { 1 });
+            rate.push(if major { 0 } else { 1 });
         } else {
-            gamma.push(if major { 1 } else { 0 });
+            rate.push(if major { 1 } else { 0 });
         }
     }
-    gamma
+    rate
 }
 
 fn part1(lines: Vec<String>) -> String {
