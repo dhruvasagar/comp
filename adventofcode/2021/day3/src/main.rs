@@ -18,7 +18,7 @@ fn to_dec(bits: Vec<i32>) -> i32 {
 
 fn rate(bits: Vec<Vec<i32>>, major: bool) -> Vec<i32> {
     let mut gamma: Vec<i32> = vec![];
-    let bsize: i32 = bits[0].len() as i32;
+    let bsize = bits[0].len();
     for i in 0..bsize {
         let mut n0: i32 = 0;
         let mut n1: i32 = 0;
@@ -53,15 +53,15 @@ fn part1(lines: Vec<String>) -> String {
 }
 
 fn filter(bits: Vec<Vec<i32>>, major: bool) -> Vec<Vec<i32>> {
-    let mut gamma_bits = bits.clone();
-    let bsize: i32 = bits[0].len() as i32;
+    let mut filtered_bits = bits.clone();
+    let bsize = bits[0].len();
     for i in 0..bsize {
         let mut n0: i32 = 0;
         let mut n1: i32 = 0;
         let mut idx0: Vec<i32> = vec![];
         let mut idx1: Vec<i32> = vec![];
-        for j in 0..gamma_bits.len() {
-            let bbit = gamma_bits[j as usize].clone();
+        for j in 0..filtered_bits.len() {
+            let bbit = filtered_bits[j as usize].clone();
             if bbit[i as usize] == 0 {
                 idx0.push(j as i32);
                 n0 = n0 + 1;
@@ -85,14 +85,14 @@ fn filter(bits: Vec<Vec<i32>>, major: bool) -> Vec<Vec<i32>> {
             }
         };
         for idx in idxx.clone() {
-            tmp_bits.push(gamma_bits[idx as usize].clone());
+            tmp_bits.push(filtered_bits[idx as usize].clone());
         }
-        gamma_bits = tmp_bits;
-        if gamma_bits.len() == 1 {
+        filtered_bits = tmp_bits;
+        if filtered_bits.len() == 1 {
             break;
         }
     }
-    gamma_bits
+    filtered_bits
 }
 
 fn part2(lines: Vec<String>) -> String {
