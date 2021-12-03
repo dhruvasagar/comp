@@ -23,7 +23,7 @@ fn rate(bits: Vec<Vec<i32>>, major: bool) -> Vec<i32> {
         let mut n0: i32 = 0;
         let mut n1: i32 = 0;
         for bbit in bits.clone() {
-            if bbit[i as usize] == 0 {
+            if bbit[i] == 0 {
                 n0 = n0 + 1;
             } else {
                 n1 = n1 + 1
@@ -58,15 +58,15 @@ fn filter(bits: Vec<Vec<i32>>, major: bool) -> Vec<Vec<i32>> {
     for i in 0..bsize {
         let mut n0: i32 = 0;
         let mut n1: i32 = 0;
-        let mut idx0: Vec<i32> = vec![];
-        let mut idx1: Vec<i32> = vec![];
+        let mut idx0: Vec<usize> = vec![];
+        let mut idx1: Vec<usize> = vec![];
         for j in 0..filtered_bits.len() {
-            let bbit = filtered_bits[j as usize].clone();
+            let bbit = filtered_bits[j].clone();
             if bbit[i as usize] == 0 {
-                idx0.push(j as i32);
+                idx0.push(j);
                 n0 = n0 + 1;
             } else {
-                idx1.push(j as i32);
+                idx1.push(j);
                 n1 = n1 + 1
             }
         }
@@ -85,7 +85,7 @@ fn filter(bits: Vec<Vec<i32>>, major: bool) -> Vec<Vec<i32>> {
             }
         };
         for idx in idxx.clone() {
-            tmp_bits.push(filtered_bits[idx as usize].clone());
+            tmp_bits.push(filtered_bits[idx].clone());
         }
         filtered_bits = tmp_bits;
         if filtered_bits.len() == 1 {
