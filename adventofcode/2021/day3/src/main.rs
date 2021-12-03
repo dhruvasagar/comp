@@ -3,8 +3,7 @@ use std::io;
 fn read_input() -> Vec<String> {
     use std::io::prelude::*;
     let stdin = io::stdin();
-    let lines = stdin.lock().lines().map(|x| x.unwrap()).collect();
-    lines
+    stdin.lock().lines().map(|x| x.unwrap()).collect()
 }
 
 fn to_dec(bits: Vec<i32>) -> i32 {
@@ -105,22 +104,22 @@ fn part2(lines: Vec<String>) -> String {
             .collect();
         bits.push(bbits);
     }
-    let mut gamma_bits = bits.clone();
-    let mut epsilon_bits = bits.clone();
+    let mut ograting_bits = bits.clone();
+    let mut csrating_bits = bits.clone();
     loop {
-        if gamma_bits.len() > 1 {
-            gamma_bits = filter(gamma_bits.clone(), true);
+        if ograting_bits.len() > 1 {
+            ograting_bits = filter(ograting_bits.clone(), true);
         }
-        if epsilon_bits.len() > 1 {
-            epsilon_bits = filter(epsilon_bits.clone(), false);
+        if csrating_bits.len() > 1 {
+            csrating_bits = filter(csrating_bits.clone(), false);
         }
-        if gamma_bits.len() == 1 && epsilon_bits.len() == 1 {
+        if ograting_bits.len() == 1 && csrating_bits.len() == 1 {
             break;
         }
     }
     format!(
         "{}",
-        to_dec(gamma_bits[0].clone()) * to_dec(epsilon_bits[0].clone())
+        to_dec(ograting_bits[0].clone()) * to_dec(csrating_bits[0].clone())
     )
 }
 
