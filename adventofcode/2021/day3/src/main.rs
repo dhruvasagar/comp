@@ -11,7 +11,7 @@ fn to_dec(bits: Vec<i32>) -> i32 {
     let base: i32 = 2;
     let mut res: i32 = 0;
     for i in 0..size {
-        res = res + bits[i as usize] * base.pow(size - i - 1);
+        res += bits[i as usize] * base.pow(size - i - 1);
     }
     res
 }
@@ -24,9 +24,9 @@ fn rate(bits: Vec<Vec<i32>>, major: bool) -> Vec<i32> {
         let mut n1: i32 = 0;
         for bbit in bits.clone() {
             if bbit[i] == 0 {
-                n0 = n0 + 1;
+                n0 += 1;
             } else {
-                n1 = n1 + 1
+                n1 += 1;
             }
         }
         if n0 > n1 {
@@ -64,10 +64,10 @@ fn filter(bits: Vec<Vec<i32>>, major: bool) -> Vec<Vec<i32>> {
             let bbit = filtered_bits[j].clone();
             if bbit[i as usize] == 0 {
                 idx0.push(j);
-                n0 = n0 + 1;
+                n0 += 1;
             } else {
                 idx1.push(j);
-                n1 = n1 + 1
+                n1 += 1;
             }
         }
         let mut tmp_bits = vec![];
