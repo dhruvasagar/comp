@@ -138,8 +138,7 @@ fn part2(lines: Vec<String>) -> String {
     format!("{}", score)
 }
 
-#[tokio::main]
-async fn main() {
+fn main() {
     let lines = read_input();
     println!("{}", part1(lines.clone()));
     println!("{}", part2(lines.clone()));
