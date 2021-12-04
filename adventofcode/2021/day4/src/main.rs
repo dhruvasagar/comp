@@ -22,11 +22,9 @@ struct Board {
 impl Board {
     fn has_won(&self) -> bool {
         let bsize = self.cells.len();
-        let mut rowwon = true;
-        let mut colwon = true;
         for i in 0..bsize {
-            rowwon = true;
-            colwon = true;
+            let mut rowwon = true;
+            let mut colwon = true;
             for j in 0..bsize {
                 let rcell = self.cells[i][j].clone();
                 let ccell = self.cells[j][i].clone();
@@ -37,7 +35,7 @@ impl Board {
                 return true;
             }
         }
-        rowwon || colwon
+        false
     }
 
     fn score(&self, num: i32) -> i32 {
