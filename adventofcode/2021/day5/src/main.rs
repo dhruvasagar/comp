@@ -1,5 +1,7 @@
 use std::collections::HashMap;
 use std::io;
+use std::num::ParseIntError;
+use std::str::FromStr;
 
 #[allow(dead_code)]
 fn read_input() -> Vec<String> {
@@ -14,6 +16,17 @@ struct Point {
     y: i32,
 }
 
+impl FromStr for Point {
+    type Err = ParseIntError;
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        let coords: Vec<i32> = s.split(',').map(|x| x.parse().unwrap()).collect();
+        Ok(Point {
+            x: coords[0],
+            y: coords[1],
+        })
+    }
+}
+
 impl Point {
     fn new(x: i32, y: i32) -> Self {
         Self { x, y }
@@ -24,29 +37,29 @@ impl Point {
 struct Segment {
     start: Point,
     end: Point,
+    points: Vec<Point>,
+}
 
-    ipoints: Vec<Point>,
+impl FromStr for Segment {
+    type Err = ParseIntError;
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        let points: Vec<Point> = s.split(" -> ").map(|x| x.parse().unwrap()).collect();
+        Ok(Segment::new(points[0].clone(), points[1].clone()))
+    }
 }
 
 impl Segment {
     fn new(start: Point, end: Point) -> Self {
         let s = start.clone();
         let e = end.clone();
-        let ipoints: Vec<Point> = vec![];
-        let mut seg = Self {
-            start,
-            end,
-            ipoints,
-        };
-        let mut i: i32 = 0;
-        let len = if seg.is_h() {
-            (s.x - e.x).abs()
-        } else if seg.is_v() {
+        let points: Vec<Point> = vec![];
+        let mut seg = Self { start, end, points };
+        let len = if seg.is_v() {
             (s.y - e.y).abs()
         } else {
             (s.x - e.x).abs()
         };
-        while i <= len {
+        for i in 0..=len {
             let x = if s.x == e.x {
                 s.x
             } else if s.x < e.x {
@@ -62,8 +75,7 @@ impl Segment {
                 s.y - i
             };
             let p = Point::new(x, y);
-            seg.ipoints.push(p);
-            i += 1;
+            seg.points.push(p);
         }
         seg
     }
@@ -73,24 +85,19 @@ impl Segment {
     fn is_v(&self) -> bool {
         self.start.x == self.end.x
     }
+    fn is_hv(&self) -> bool {
+        self.is_h() || self.is_v()
+    }
     fn is_diag(&self) -> bool {
         let slope = (self.start.y - self.end.y) / (self.start.x - self.end.x);
         slope.abs() == 1
-    }
-    fn is_hv(&self) -> bool {
-        self.is_h() || self.is_v()
     }
 }
 
 fn parse_input(lines: Vec<String>, diag: bool) -> Vec<Segment> {
     let mut res: Vec<Segment> = vec![];
     for line in lines {
-        let points: Vec<&str> = line.split(" -> ").collect();
-        let starti: Vec<i32> = points[0].split(',').map(|x| x.parse().unwrap()).collect();
-        let endi: Vec<i32> = points[1].split(',').map(|x| x.parse().unwrap()).collect();
-        let start = Point::new(starti[0], starti[1]);
-        let end = Point::new(endi[0], endi[1]);
-        let seg = Segment::new(start, end);
+        let seg: Segment = line.parse().unwrap();
         if seg.is_hv() || (diag && seg.is_diag()) {
             res.push(seg);
         }
@@ -98,11 +105,10 @@ fn parse_input(lines: Vec<String>, diag: bool) -> Vec<Segment> {
     res
 }
 
-fn part1(lines: Vec<String>) -> String {
-    let segs = parse_input(lines, false);
+fn count_intersections(segs: Vec<Segment>) -> i32 {
     let mut mem: HashMap<Point, i32> = HashMap::new();
     for seg in segs {
-        for p in seg.ipoints {
+        for p in seg.points {
             match mem.get_mut(&p) {
                 Some(n) => *n += 1,
                 None => {
@@ -111,35 +117,21 @@ fn part1(lines: Vec<String>) -> String {
             };
         }
     }
-    let res = mem
-        .values()
+    mem.values()
         .filter(|&n| *n > 1)
         .map(|n| *n)
         .collect::<Vec<i32>>()
-        .len();
-    format!("{}", res)
+        .len() as i32
+}
+
+fn part1(lines: Vec<String>) -> String {
+    let segs = parse_input(lines, false);
+    format!("{}", count_intersections(segs))
 }
 
 fn part2(lines: Vec<String>) -> String {
     let segs = parse_input(lines, true);
-    let mut mem: HashMap<Point, i32> = HashMap::new();
-    for seg in segs {
-        for p in seg.ipoints {
-            match mem.get_mut(&p) {
-                Some(n) => *n += 1,
-                None => {
-                    mem.insert(p, 1);
-                }
-            };
-        }
-    }
-    let res = mem
-        .values()
-        .filter(|&n| *n > 1)
-        .map(|n| *n)
-        .collect::<Vec<i32>>()
-        .len();
-    format!("{}", res)
+    format!("{}", count_intersections(segs))
 }
 
 fn main() {
