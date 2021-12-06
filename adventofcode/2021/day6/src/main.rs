@@ -28,12 +28,16 @@ fn parse_input(lines: Vec<i32>) -> Vec<LanternFish> {
     fishes
 }
 
-fn simulate(fishes: Vec<LanternFish>, days: i64) -> i64 {
+fn simulate(fishes: Vec<LanternFish>) -> (i64, i64) {
     let mut timers = vec![0; 9];
     for f in fishes {
         timers[f.timer as usize] += 1;
     }
-    for _ in 0..days {
+    let mut part1 = 0;
+    for day in 0..256 {
+        if day == 80 {
+            part1 = timers.iter().sum();
+        }
         let zero = timers[0];
         for i in 0..8 {
             timers[i] = timers[i + 1];
@@ -41,11 +45,12 @@ fn simulate(fishes: Vec<LanternFish>, days: i64) -> i64 {
         timers[8] = zero;
         timers[6] += zero; // each fish at 0 timer creates a new fish
     }
-    timers.iter().sum()
+    (part1, timers.iter().sum())
 }
 
 fn main() {
     let fishes = parse_input(read_input());
-    println!("{}", simulate(fishes.clone(), 80));
-    println!("{}", simulate(fishes.clone(), 256));
+    let (part1, part2) = simulate(fishes);
+    println!("{}", part1);
+    println!("{}", part2);
 }
