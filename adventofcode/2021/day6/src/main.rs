@@ -1,4 +1,5 @@
 use std::io;
+use std::time::Instant;
 
 #[allow(dead_code)]
 fn read_input() -> Vec<i32> {
@@ -24,19 +25,24 @@ fn simulate(fishes: Vec<i32>) -> (i64, i64) {
         if day == 80 {
             part1 = timers.iter().sum();
         }
-        let zero = timers[0];
-        for i in 0..8 {
-            timers[i] = timers[i + 1];
-        }
-        timers[8] = zero; // each fish at 0 timer creates a new fish
-        timers[6] += zero; // the old fish timer now resets to 6
+        timers.rotate_left(1);
+        timers[6] += timers[8]; // the old fish timer now resets to 6
     }
     (part1, timers.iter().sum())
 }
 
 fn main() {
+    let start = Instant::now();
     let fishes = read_input();
+    let startsim = Instant::now();
     let (part1, part2) = simulate(fishes);
+    let endsim = startsim.elapsed();
+    let end = start.elapsed();
+
     println!("{}", part1);
     println!("{}", part2);
+    println!(
+        "Time for simulation: {:?}, Total time with IO: {:?}",
+        endsim, end
+    );
 }
