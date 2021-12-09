@@ -1,0 +1,140 @@
+use std::collections::HashMap;
+use std::io;
+use std::time::Instant;
+
+#[allow(dead_code)]
+fn read_input() -> Vec<Vec<i32>> {
+    use std::io::prelude::*;
+    let stdin = io::stdin();
+    stdin
+        .lock()
+        .lines()
+        .map(|x| x.unwrap())
+        .collect::<Vec<String>>()
+        .iter()
+        .map(|x| {
+            x.chars()
+                .collect::<Vec<char>>()
+                .iter()
+                .map(|c| c.to_string().parse().unwrap())
+                .collect()
+        })
+        .collect()
+}
+
+const DIRECTIONS: [(i32, i32); 8] = [
+    (-1, -1),
+    (0, -1),
+    (1, -1),
+    (-1, 0),
+    (1, 0),
+    (-1, 1),
+    (0, 1),
+    (1, 1),
+];
+
+fn neighbours(point: (i32, i32)) -> Vec<(i32, i32)> {
+    let (x, y) = point;
+    let mut ns: Vec<(i32, i32)> = vec![];
+    for (dx, dy) in DIRECTIONS.iter() {
+        let np = (x + dx, y + dy);
+        ns.push(np);
+    }
+    ns
+}
+
+fn inside(grid: Vec<Vec<i32>>, point: (i32, i32)) -> bool {
+    let (x, y) = point;
+    let xmax = grid.len() as i32;
+    let ymax = grid[0].len() as i32;
+    x >= 0 && x < xmax && y >= 0 && y < ymax
+}
+
+fn low_points(grid: Vec<Vec<i32>>) -> Vec<(i32, i32)> {
+    let mut lps: Vec<(i32, i32)> = vec![];
+    for i in 0..grid.len() {
+        let row = grid[i].clone();
+        for j in 0..row.len() {
+            let p = (i as i32, j as i32);
+            let ns: Vec<(i32, i32)> = neighbours(p)
+                .iter()
+                .filter_map(|&pp| {
+                    if inside(grid.clone(), pp) {
+                        Some(pp)
+                    } else {
+                        None
+                    }
+                })
+                .collect();
+            let low = ns
+                .iter()
+                .all(|&(nx, ny)| grid[i][j] < grid[nx as usize][ny as usize]);
+            if low {
+                // res += grid[i][j] + 1;
+                lps.push(p)
+            }
+        }
+    }
+    lps
+}
+
+fn part1(grid: Vec<Vec<i32>>) -> String {
+    let lps = low_points(grid.clone());
+    let mut res = 0;
+    for (y, x) in lps {
+        res += grid[y as usize][x as usize] + 1;
+    }
+    format!("{}", res)
+}
+
+fn basin_size(grid: Vec<Vec<i32>>, vis: &mut HashMap<(i32, i32, i32), bool>, (x, y): (i32, i32)) {
+    vis.insert((x, y, grid[x as usize][y as usize]), true);
+    let val = grid[x as usize][y as usize];
+    if val == 8 {
+        return;
+    }
+    let ns: Vec<(i32, i32)> = neighbours((x, y))
+        .iter()
+        .filter_map(|&(px, py)| {
+            if inside(grid.clone(), (px, py)) && grid[px as usize][py as usize] == val + 1 {
+                Some((px, py))
+            } else {
+                None
+            }
+        })
+        .collect();
+    for (nx, ny) in ns.clone() {
+        vis.insert((nx, ny, grid[nx as usize][ny as usize]), true);
+        basin_size(grid.clone(), vis, (nx, ny))
+    }
+}
+
+fn part2(grid: Vec<Vec<i32>>) -> String {
+    let lps = low_points(grid.clone());
+    let mut vls: Vec<i32> = vec![];
+    for (x, y) in lps {
+        let vis = &mut HashMap::new();
+        basin_size(grid.clone(), vis, (x, y));
+        vls.push(vis.len() as i32);
+    }
+    vls.sort_by(|a, b| b.cmp(a));
+    println!("{:?}", vls);
+    let res = vls[0..3].iter().fold(1, |acc, l| acc * l);
+    format!("{}", res)
+}
+
+fn main() {
+    let s = Instant::now();
+    let grid = read_input();
+    let s1 = Instant::now();
+    println!("{}", part1(grid.clone()));
+    let e1 = s1.elapsed();
+    let s2 = Instant::now();
+    println!("{}", part2(grid.clone()));
+    let e2 = s2.elapsed();
+    let e = s.elapsed();
+    println!(
+        "Time for part1: {:?}, part2: {:?}, total with IO: {:?}",
+        e1, e2, e
+    );
+}
