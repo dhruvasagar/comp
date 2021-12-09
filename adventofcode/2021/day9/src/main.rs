@@ -24,6 +24,13 @@ fn read_input() -> Vec<Vec<i32>> {
 
 const DIRECTIONS: [(i32, i32); 4] = [(0, -1), (-1, 0), (1, 0), (0, 1)];
 
+fn inside(grid: Vec<Vec<i32>>, point: (i32, i32)) -> bool {
+    let (x, y) = point;
+    let xmax = grid.len() as i32;
+    let ymax = grid[0].len() as i32;
+    x >= 0 && x < xmax && y >= 0 && y < ymax
+}
+
 fn neighbours(grid: Vec<Vec<i32>>, point: (i32, i32)) -> Vec<(i32, i32)> {
     let (x, y) = point;
     let mut ns: Vec<(i32, i32)> = vec![];
@@ -40,13 +47,6 @@ fn neighbours(grid: Vec<Vec<i32>>, point: (i32, i32)) -> Vec<(i32, i32)> {
             }
         })
         .collect()
-}
-
-fn inside(grid: Vec<Vec<i32>>, point: (i32, i32)) -> bool {
-    let (x, y) = point;
-    let xmax = grid.len() as i32;
-    let ymax = grid[0].len() as i32;
-    x >= 0 && x < xmax && y >= 0 && y < ymax
 }
 
 fn low_points(grid: Vec<Vec<i32>>) -> Vec<(i32, i32)> {
@@ -67,13 +67,13 @@ fn low_points(grid: Vec<Vec<i32>>) -> Vec<(i32, i32)> {
     lps
 }
 
-fn part1(grid: Vec<Vec<i32>>) -> String {
+fn part1(grid: Vec<Vec<i32>>) -> i32 {
     let lps = low_points(grid.clone());
     let mut res = 0;
-    for (y, x) in lps {
-        res += grid[y as usize][x as usize] + 1;
+    for (x, y) in lps {
+        res += grid[x as usize][y as usize] + 1;
     }
-    format!("{}", res)
+    res
 }
 
 fn basin_size_rec(
@@ -126,7 +126,7 @@ fn basin_size(grid: Vec<Vec<i32>>, vis: &mut HashMap<(i32, i32), bool>, point: (
     size
 }
 
-fn part2(grid: Vec<Vec<i32>>) -> String {
+fn part2(grid: Vec<Vec<i32>>) -> i32 {
     let lps = low_points(grid.clone());
 
     let mut vls: Vec<i32> = vec![];
@@ -135,7 +135,7 @@ fn part2(grid: Vec<Vec<i32>>) -> String {
         vls.push(basin_size(grid.clone(), vis, lp));
     }
     vls.sort_by(|a, b| b.cmp(a));
-    format!("{}", vls[0] * vls[1] * vls[2])
+    vls[0] * vls[1] * vls[2]
 }
 
 fn main() {
