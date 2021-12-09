@@ -67,8 +67,7 @@ fn low_points(grid: Vec<Vec<i32>>) -> Vec<(i32, i32)> {
     lps
 }
 
-fn part1(grid: Vec<Vec<i32>>) -> i32 {
-    let lps = low_points(grid.clone());
+fn part1(grid: Vec<Vec<i32>>, lps: Vec<(i32, i32)>) -> i32 {
     let mut res = 0;
     for (x, y) in lps {
         res += grid[x as usize][y as usize] + 1;
@@ -126,9 +125,7 @@ fn basin_size(grid: Vec<Vec<i32>>, vis: &mut HashMap<(i32, i32), bool>, point: (
     size
 }
 
-fn part2(grid: Vec<Vec<i32>>) -> i32 {
-    let lps = low_points(grid.clone());
-
+fn part2(grid: Vec<Vec<i32>>, lps: Vec<(i32, i32)>) -> i32 {
     let mut vls: Vec<i32> = vec![];
     let vis = &mut HashMap::new();
     for lp in lps {
@@ -142,10 +139,11 @@ fn main() {
     let s = Instant::now();
     let grid = read_input();
     let s1 = Instant::now();
-    println!("{}", part1(grid.clone()));
+    let lps = low_points(grid.clone());
+    println!("{}", part1(grid.clone(), lps.clone()));
     let e1 = s1.elapsed();
     let s2 = Instant::now();
-    println!("{}", part2(grid.clone()));
+    println!("{}", part2(grid.clone(), lps.clone()));
     let e2 = s2.elapsed();
     let e = s.elapsed();
     println!(
