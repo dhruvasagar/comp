@@ -6,14 +6,14 @@ pair '}' = '{'
 pair ']' = '['
 pair ')' = '('
 pair '>' = '<'
-pair _ = 'c'
+pair _ = '_'
 
 revPair :: Char -> Char
 revPair '{' = '}'
 revPair '[' = ']'
 revPair '(' = ')'
 revPair '<' = '>'
-revPair _ = 'c'
+revPair _ = '_'
 
 syntaxScore :: Char -> Int
 syntaxScore ')' = 3
@@ -29,14 +29,14 @@ errorScore '}' = 3
 errorScore '>' = 4
 errorScore _ = 0
 
-corrupted :: String -> String -> Bool
-corrupted [] _ = False
-corrupted (c:cs) []
-  | c == '[' || c == '(' || c == '{' || c == '<' = corrupted cs [c]
+isCorrupt :: String -> String -> Bool
+isCorrupt [] _ = False
+isCorrupt (c:cs) []
+  | c == '[' || c == '(' || c == '{' || c == '<' = isCorrupt cs [c]
   | otherwise = True
-corrupted (c:cs) s@(sf:ss)
-  | c == '[' || c == '(' || c == '{' || c == '<' = corrupted cs (c:s)
-  | otherwise = (sf /= pair c) || corrupted cs ss
+isCorrupt (c:cs) s@(sf:ss)
+  | c == '[' || c == '(' || c == '{' || c == '<' = isCorrupt cs (c:s)
+  | otherwise = (sf /= pair c) || isCorrupt cs ss
 
 corruptChar :: String -> String -> Char
 corruptChar [] (s:ss) = revPair s
@@ -58,7 +58,7 @@ complete (c:cs) s@(sf:ss)
 
 part1 :: [String] -> Int
 part1 ss = sum $ map (syntaxScore . (`corruptChar` "")) corrupt
-  where corrupt = filter (`corrupted` "") ss
+  where corrupt = filter (`isCorrupt` "") ss
 
 mid :: [Int] -> Int
 mid xs = xs !! idx
@@ -66,7 +66,7 @@ mid xs = xs !! idx
 
 part2 :: [String] -> Int
 part2 ss = mid $ sort $ map (foldl (\a b -> a * 5 + b) 0 . map errorScore) completion
-  where incomplete = filter (not . (`corrupted` "")) ss
+  where incomplete = filter (not . (`isCorrupt` "")) ss
         completion = map (`complete` "") incomplete
 
 mapm :: [a -> b] -> a -> [b]
