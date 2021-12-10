@@ -27,10 +27,10 @@ end
 lines = read_input.map { |l| l.chomp.chars }
 lcs = lines.map(&method(:corrupted?))
 
-p lcs.select { |l| l.size == 1 }.map { |l| SYNTAX_ERROR_SCORE[l] }.sum
+p lcs.select { |l| l.size == 1 }.map(&SYNTAX_ERROR_SCORE.method(:[])).sum
 
 def p2_score(bcs)
-  bcs.reverse.map { |c| REV_PAIRS[c] }.reduce(0) { |r, c| 5 * r + AUTOCOMPLETE_SCORE[c] }
+  bcs.reverse.map(&REV_PAIRS.method(:[])).reduce(0) { |r, c| 5 * r + AUTOCOMPLETE_SCORE[c] }
 end
 
 ss = lcs.reject { |l| l.size == 1 }.map(&method(:p2_score)).sort
