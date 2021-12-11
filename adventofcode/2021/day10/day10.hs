@@ -1,5 +1,5 @@
-import Debug.Trace (trace)
 import Data.List (sort)
+import Debug.Trace (trace)
 
 pair :: Char -> Char
 pair '}' = '{'
