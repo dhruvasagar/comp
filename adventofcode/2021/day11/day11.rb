@@ -7,11 +7,7 @@ end
 ENERGY_THRESHOLD = 9
 
 def display(grid)
-  grid.each do |row|
-    row.each(&method(:print))
-    puts
-  end
-  puts
+  grid.each { |row| puts row.join }
 end
 
 def neighs(point)
@@ -37,10 +33,10 @@ def flash(grid, memo, point)
 
   fc = 1
   neighs(point).each do |i, j|
-    next if memo.key?([i, j]) || !inside?(grid, [i, j])
+    next if memo.key?([i, j])
+    next unless inside?(grid, [i, j])
 
-    o = grid[j][i]
-    o == 9 ? fc += flash(grid, memo, [i, j]) : grid[j][i] += 1
+    grid[j][i] == 9 ? fc += flash(grid, memo, [i, j]) : grid[j][i] += 1
   end
   fc
 end
@@ -59,7 +55,7 @@ def step(grid)
 end
 
 def part1(grid)
-  p 100.times.to_a.reduce(0) { |fc| fc + step(grid) }
+  (1..100).reduce(0) { |fc| fc + step(grid) }
 end
 
 def all_flashed?(grid)
@@ -67,14 +63,12 @@ def all_flashed?(grid)
 end
 
 def part2(grid)
-  i = 100 # done in part1
-  while step grid
-    i += 1
-    break if all_flashed?(grid)
+  (101..).each do |i|
+    step grid
+    return i if all_flashed?(grid)
   end
-  p i
 end
 
 grid = read_input.map { |l| l.chomp.chars.map(&:to_i) }
-part1 grid
-part2 grid
+p part1 grid
+p part2 grid
