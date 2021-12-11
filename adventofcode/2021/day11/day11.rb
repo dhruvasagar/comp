@@ -44,11 +44,11 @@ end
 def step(grid)
   fc = 0
   memo = {}
-  grid.each.with_index do |row, y|
-    row.each.with_index do |o, x|
+  grid.each_index do |y|
+    grid[y].each_index do |x|
       next if memo.key?([x, y])
 
-      o == 9 ? fc += flash(grid, memo, [x, y]) : grid[y][x] += 1
+      grid[y][x] == 9 ? fc += flash(grid, memo, [x, y]) : grid[y][x] += 1
     end
   end
   fc
