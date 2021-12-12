@@ -8,21 +8,22 @@ def small?(char)
   /[[:lower:]]/.match(char)
 end
 
-def all_paths(graph, start, ends, path, &block)
+def all_paths(graph, start, ends, path, paths, &block)
   path += [start]
 
-  block.call(path) if start == ends
+  if start == ends
+    paths.push(path)
+    return
+  end
 
   graph[start].each do |np|
-    all_paths(graph, np, ends, path, &block) if !small?(np) || !path.include?(np)
+    all_paths(graph, np, ends, path, paths, &block) if !small?(np) || block.call(path, np)
   end
 end
 
 def part1(graph)
   paths = []
-  all_paths(graph, 'start', 'end', []) do |path|
-    paths.push(path)
-  end
+  all_paths(graph, 'start', 'end', [], paths) { |path, np| !path.include?(np) }
   paths.size
 end
 
@@ -39,21 +40,9 @@ def valid_path?(path, node)
   diff.zero?
 end
 
-def all_paths2(graph, start, ends, path, &block)
-  path += [start]
-
-  block.call(path) if start == ends
-
-  graph[start].each do |np|
-    all_paths2(graph, np, ends, path, &block) if !small?(np) || (np != 'start' && valid_path?(path, np))
-  end
-end
-
 def part2(graph)
   paths = []
-  all_paths2(graph, 'start', 'end', []) do |path|
-    paths.push(path)
-  end
+  all_paths(graph, 'start', 'end', [], paths) { |path, np| valid_path?(path, np) }
   paths.size
 end
 
