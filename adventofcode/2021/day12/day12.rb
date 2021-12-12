@@ -4,8 +4,8 @@ def read_input
   ARGF.readlines
 end
 
-def small?(char)
-  /[[:lower:]]/.match(char)
+def small?(str)
+  /[[:lower:]]/.match(str)
 end
 
 def all_paths(graph, start, ends, path, paths, &block)
