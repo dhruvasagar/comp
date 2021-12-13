@@ -10,56 +10,33 @@ def display(coords)
   cmap = coords.each_with_object({}) { |c, r| r[c] = true }
   ymax.times do |y|
     xmax.times do |x|
-      print cmap[[x, y]] ? '#' : '.'
+      print cmap[[x, y]] ? '#' : ' '
     end
     puts
   end
-  puts
 end
 
-def fold_hor(coords, row)
-  # fold up
-  coords.map do |x, y|
-    next [x, y] if y <= row
-
-    [x, 2 * row - y]
-  end
-end
-
-def fold_ver(coords, col)
-  # fold left
-  coords.map do |x, y|
-    next [x, y] if x <= col
-
-    [2 * col - x, y]
+def fold(coords, point)
+  x, y = point
+  coords.map do |cx, cy|
+    cx = x.zero? ? cx : x - (x - cx).abs
+    cy = y.zero? ? cy : y - (y - cy).abs
+    [cx, cy]
   end
 end
 
 def part1(coords, insts)
-  c, val = insts[0] # only first
-  coords = if c == 'x'
-             fold_ver(coords, val.to_i)
-           else
-             fold_hor(coords, val.to_i)
-           end
+  coords = fold(coords, insts[0])
   coords.uniq.size
 end
 
 def part2(coords, insts)
-  insts.each do |inst|
-    c, val = inst
-    coords = if c == 'x'
-               fold_ver(coords, val.to_i)
-             else
-               fold_hor(coords, val.to_i)
-             end
-  end
+  insts.each { |inst| coords = fold(coords, inst) }
   display coords
 end
 
 coords, insts = read_input.chomp.split("\n\n")
 coords = coords.split("\n").map { |c| c.split(',').map(&:to_i) }
-insts = insts.split("\n").map { |i| i.split(' ').last.split('=') }
-
+insts = insts.split("\n").map { |i| i.split(' ').last.split('=') }.map { |c, v| c == 'x' ? [v.to_i, 0] : [0, v.to_i] }
 p part1(coords.map(&:dup), insts)
 part2(coords.map(&:dup), insts)
