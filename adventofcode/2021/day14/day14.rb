@@ -28,7 +28,7 @@ def letter_freq(hcs)
   hcs.each_with_object(lc) { |(p, c), h| h[p[0]] += c }
 end
 
-def part2(poly, rules, count)
+def step(poly, rules, count)
   hc = Hash.new { |h, k| h[k] = 0 }
   (0...(poly.size - 1)).each_with_object(hc) { |i, h| h[poly[i..(i + 1)]] += 1 }
   lc = letter_freq(pair_freq(hc, rules, count))
@@ -37,5 +37,5 @@ def part2(poly, rules, count)
   vals.max - vals.min
 end
 
-p part2(poly, rules, 10)
-p part2(poly, rules, 40)
+p step(poly, rules, 10)
+p step(poly, rules, 40)
