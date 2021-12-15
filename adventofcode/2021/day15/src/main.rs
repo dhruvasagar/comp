@@ -60,11 +60,11 @@ impl Grid {
     }
 
     #[allow(dead_code)]
-    fn display(&self, dist: HashMap<Point, i32>) {
+    fn display(&self) {
         for y in 0..self.size {
             for x in 0..self.size {
                 let p = Point { x, y };
-                print!("{} ", dist.get(&p).unwrap());
+                print!("{} ", self.get(p));
             }
             println!("");
         }
