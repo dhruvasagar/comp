@@ -25,7 +25,7 @@ enum Operator {
 
 #[allow(dead_code)]
 #[derive(Clone, Debug)]
-enum PacketType {
+enum Packet {
     LiteralValue {
         value: i64,
         version: i64,
@@ -38,37 +38,37 @@ enum PacketType {
         versions: Vec<i64>,
         operator: Operator,
         last_index: usize,
-        packets: Vec<PacketType>,
+        packets: Vec<Packet>,
     },
 }
 
-impl PacketType {
+impl Packet {
     fn version_total(&self) -> i64 {
         match self {
-            PacketType::LiteralValue {
+            Packet::LiteralValue {
                 version,
                 value: _,
                 last_index: _,
             } => *version,
-            PacketType::Operator {
+            Packet::Operator {
                 versions,
                 nums: _,
+                packets: _,
                 type_id: _,
                 version: _,
                 operator: _,
                 last_index: _,
-                packets: _,
             } => versions.iter().sum(),
         }
     }
     fn value(&self) -> i64 {
         match self {
-            PacketType::LiteralValue {
+            Packet::LiteralValue {
                 value,
                 version: _,
                 last_index: _,
             } => *value,
-            PacketType::Operator {
+            Packet::Operator {
                 type_id,
                 packets,
                 nums: _,
@@ -131,9 +131,9 @@ impl PacketType {
     }
 }
 
-impl FromStr for PacketType {
+impl FromStr for Packet {
     type Err = ();
-    fn from_str(s: &str) -> Result<PacketType, ()> {
+    fn from_str(s: &str) -> Result<Packet, ()> {
         let version = i64::from_str_radix(&s[0..=2], 2).unwrap();
         let type_id = i64::from_str_radix(&s[3..=5], 2).unwrap();
         // println!("s: {}, version: {}, type_id: {}", s, version, type_id);
@@ -156,7 +156,7 @@ impl FromStr for PacketType {
                     }
                 }
                 let value = i64::from_str_radix(bits.as_str(), 2).unwrap();
-                Ok(PacketType::LiteralValue {
+                Ok(Packet::LiteralValue {
                     value,
                     version,
                     last_index: start,
@@ -172,12 +172,12 @@ impl FromStr for PacketType {
                         let mut index = 22;
                         let mut nums: Vec<i64> = vec![];
                         let mut vers: Vec<i64> = vec![version];
-                        let mut packets: Vec<PacketType> = vec![];
+                        let mut packets: Vec<Packet> = vec![];
                         while index < end {
-                            let p = PacketType::from_str(&s[index..])?;
+                            let p = Packet::from_str(&s[index..])?;
                             packets.push(p.clone());
                             match p {
-                                PacketType::LiteralValue {
+                                Packet::LiteralValue {
                                     value,
                                     version,
                                     last_index,
@@ -186,7 +186,7 @@ impl FromStr for PacketType {
                                     vers.push(version);
                                     index += last_index;
                                 }
-                                PacketType::Operator {
+                                Packet::Operator {
                                     last_index,
                                     versions: vs,
                                     nums: ns,
@@ -206,7 +206,7 @@ impl FromStr for PacketType {
                             };
                         }
 
-                        Ok(PacketType::Operator {
+                        Ok(Packet::Operator {
                             nums,
                             type_id,
                             version,
@@ -222,13 +222,13 @@ impl FromStr for PacketType {
                         let mut index = 18;
                         let mut nums: Vec<i64> = vec![];
                         let mut vers: Vec<i64> = vec![version];
-                        let mut packets: Vec<PacketType> = vec![];
+                        let mut packets: Vec<Packet> = vec![];
                         let mut pcount = 0;
                         while pcount < count as usize {
-                            let p = PacketType::from_str(&s[index..])?;
+                            let p = Packet::from_str(&s[index..])?;
                             packets.push(p.clone());
                             match p {
-                                PacketType::LiteralValue {
+                                Packet::LiteralValue {
                                     value,
                                     version,
                                     last_index,
@@ -237,7 +237,7 @@ impl FromStr for PacketType {
                                     vers.push(version);
                                     index += last_index;
                                 }
-                                PacketType::Operator {
+                                Packet::Operator {
                                     last_index,
                                     versions: vs,
                                     nums: ns,
@@ -258,7 +258,7 @@ impl FromStr for PacketType {
                             pcount += 1;
                         }
 
-                        Ok(PacketType::Operator {
+                        Ok(Packet::Operator {
                             nums,
                             version,
                             packets,
@@ -275,18 +275,18 @@ impl FromStr for PacketType {
     }
 }
 
-fn part1(packet: PacketType) -> String {
+fn part1(packet: Packet) -> String {
     format!("{}", packet.version_total())
 }
 
-fn part2(packet: PacketType) -> String {
+fn part2(packet: Packet) -> String {
     format!("{}", packet.value())
 }
 
 fn main() -> Result<(), ()> {
     let s = Instant::now();
     let bits = read_input();
-    let packet = PacketType::from_str(bits.as_str())?;
+    let packet = Packet::from_str(bits.as_str())?;
 
     let s1 = Instant::now();
     println!("{}", part1(packet.clone()));
