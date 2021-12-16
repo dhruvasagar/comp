@@ -1,5 +1,4 @@
 import Data.List
-import Debug.Trace (trace)
 
 data Packet = Literal Int Int | Operator Int Int [Packet]
   deriving (Eq, Show)
@@ -85,11 +84,6 @@ parseNPackets 0 ss = (ss, [])
 parseNPackets n ss = (rss, p:ps)
     where (rs, p) = parsePacket ss
           (rss, ps) = parseNPackets (n - 1) rs
-
-dropNPackets :: Int -> String -> String
-dropNPackets 0 ss = ss
-dropNPackets n ss = dropNPackets (n - 1) rs
-  where (rs, _) = parsePacket ss
 
 versionSum :: Packet -> Int
 versionSum (Literal version _) = version
