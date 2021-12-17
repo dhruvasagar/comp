@@ -27,7 +27,6 @@ def posx(vx0, time)
     end
   else
     nv = maxpos(vx0)
-    # nv = nv * nv - nv * (nv - 1) / 2
     return -1 * nv if vx0.negative?
 
     nv
@@ -87,7 +86,6 @@ def findx(range)
 end
 
 def findy(range, vx)
-  # s = [0, range[1].first].max # up is positive
   vy = [0, range[1].first].min
   ys = []
   loop do
