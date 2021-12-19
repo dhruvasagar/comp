@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'parallel'
+
 def read_input
   ARGF.readlines
 end
@@ -128,22 +130,22 @@ class Tree
     node = find { |n| n.depth == 4 && n.leaf_pair? }
     return false if node.nil?
 
-    left_neighbor = left_neighbor(node)
-    right_neighbor = right_neighbor(node)
+    left_node = left_neighbor(node)
+    right_node = right_neighbor(node)
 
-    unless left_neighbor.nil?
-      if left_neighbor.regular?
-        left_neighbor.val += node.val[0]
+    unless left_node.nil?
+      if left_node.regular?
+        left_node.val += node.val[0]
       else
-        left_neighbor.val[1] += node.val[0]
+        left_node.val[1] += node.val[0]
       end
     end
 
-    unless right_neighbor.nil?
-      if right_neighbor.regular?
-        right_neighbor.val += node.val[1]
+    unless right_node.nil?
+      if right_node.regular?
+        right_node.val += node.val[1]
       else
-        right_neighbor.val[0] += node.val[1]
+        right_node.val[0] += node.val[1]
       end
     end
 
@@ -203,27 +205,25 @@ class Tree
   end
 end
 
-def part1(lines)
-  trees = lines.map { |l| Tree.new(l) }
+def part1(trees)
   r = trees[0].add(trees[1]).reduce
-  # puts r
   trees[2..].each do |n|
     r = r.add(n).reduce
   end
-  # puts r
   puts r.magnitude
 end
 
-def part2(lines)
-  trees = lines.map { |l| Tree.new(l) }
-  trees.permutation(2).to_a.map do |t1, t2|
+def part2(trees)
+  max = Parallel.map(trees.permutation(2).to_a) do |t1, t2|
     [
       t1.dup.add(t2).reduce.magnitude,
       t2.dup.add(t1).reduce.magnitude
     ].max
   end.max
+  puts max
 end
 
 lines = read_input.map { |l| eval l }
-part1(lines)
-part2(lines)
+trees = lines.map { |l| Tree.new(l) }
+part1(trees)
+part2(trees)
