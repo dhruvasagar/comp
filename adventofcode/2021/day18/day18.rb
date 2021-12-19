@@ -216,8 +216,8 @@ end
 def part2(trees)
   max = Parallel.map(trees.permutation(2).to_a) do |t1, t2|
     [
-      t1.dup.add(t2).reduce.magnitude,
-      t2.dup.add(t1).reduce.magnitude
+      t1.add(t2).reduce.magnitude,
+      t2.add(t1).reduce.magnitude
     ].max
   end.max
   puts max
