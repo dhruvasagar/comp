@@ -50,8 +50,9 @@ def enhance(image, algo, count)
       end
     end
     # puts "count: #{t + 1}:"
-    # puts nimage.map(&:join)
-    # puts
+    # system "clear"
+    # puts nimage.map(&:join).join("\n")
+    # sleep 0.1
     image = nimage
   end
   image
@@ -63,8 +64,9 @@ image = lines[2..].map { |l| l.chomp.chars }
 
 # Part 1
 output = enhance(image, algo, 2)
+# puts output.map(&:join)
 puts output.map { |r| r.select { |p| p == '#' }.size }.sum
 
 # Part 2
-output = enhance(image, algo, 50)
+output = enhance(output, algo, 48)
 puts output.map { |r| r.select { |p| p == '#' }.size }.sum

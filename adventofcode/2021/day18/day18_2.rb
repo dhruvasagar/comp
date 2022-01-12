@@ -151,9 +151,14 @@ def mag_pair(n1, n2)
 end
 
 def magnitude(snail)
-  r = 0
-  snail.each do |num|
+  snail.each_with_index.reduce(0) do |r, (num, index)|
+    next r + num[:value] if num[:regular]
 
+    n_of_left_higher = snail[0..index].select { |s| s[:depth] < num[:depth] }.size # right of
+    n_of_right_higher = snail[(index + 1)..].select { |s| s[:depth] < num[:depth] }.size # left of
+
+    c = 3 ** n_of_right_higher * 2 ** n_of_left_higher
+    r + (3 * c * num[:value][0] + 2 * c * num[:value][1])
   end
 end
 
@@ -172,18 +177,20 @@ puts
 snails = nums.map(&method(:flat_snail)).flatten
 p snails
 puts
+
+p magnitude(snails)
 # explode(snails)
 # p snails
 
-da = deep_array(4)
-p da
-deep_push(da, [4, 3], 4)
-p da
-deep_push(da, 4, 4)
-p da
-deep_push(da, 4, 3)
-p da
-deep_push(da, 7, 3)
-p da
-deep_push(da, [8, 4], 4)
-p da
+# da = deep_array(4)
+# p da
+# deep_push(da, [4, 3], 4)
+# p da
+# deep_push(da, 4, 4)
+# p da
+# deep_push(da, 4, 3)
+# p da
+# deep_push(da, 7, 3)
+# p da
+# deep_push(da, [8, 4], 4)
+# p da

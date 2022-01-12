@@ -73,7 +73,7 @@ class Tree
     self == parent&.left
   end
 
-  def right_child
+  def right_child?
     self == parent&.right
   end
 
