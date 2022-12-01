@@ -6,29 +6,19 @@ use std::time::Instant;
 fn read_input() -> Vec<i32> {
     use std::io::prelude::*;
     let stdin = io::stdin();
-    let mut lines: Vec<i32> = stdin
+    return stdin
         .lock()
         .lines()
         .map(|x| x.unwrap())
         .map(|s| s.parse().unwrap_or(-1))
         .collect();
-    // for input set to ensure we count the last group
-    lines.push(-1);
-    lines
 }
 
 fn count_calaries(cgroups: Vec<i32>) -> Vec<i32> {
-    let mut gsum: i32 = 0;
-    let mut sall: Vec<i32> = vec![];
-    for cal in cgroups {
-        if cal == -1 {
-            sall.push(gsum);
-            gsum = 0;
-        } else {
-            gsum = gsum + cal;
-        }
-    }
-    return sall;
+    return cgroups
+        .split(|&n| n == -1)
+        .map(|l| l.iter().sum())
+        .collect();
 }
 
 fn part1(all_cals: Vec<i32>) -> i32 {
