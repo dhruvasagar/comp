@@ -111,15 +111,12 @@ fn read_input() -> Vec<String> {
 }
 
 fn part1(lines: Vec<String>) -> i32 {
-    let rounds: Vec<Vec<Move>> = lines
+    lines
         .iter()
         .map(|l| l.split(" ").map(|m| m.parse().unwrap()).collect())
-        .collect();
-    let mut score: i32 = 0;
-    for round in rounds {
-        score = score + round_score(round.first().unwrap(), round.last().unwrap());
-    }
-    score
+        .fold(0, |score, round: Vec<Move>| {
+            score + round_score(round.first().unwrap(), round.last().unwrap())
+        })
 }
 
 fn part2(lines: Vec<String>) -> i32 {
