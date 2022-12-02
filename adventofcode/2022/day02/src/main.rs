@@ -128,9 +128,7 @@ fn part2(lines: Vec<String>) -> i32 {
         let mo: Vec<&str> = line.split(" ").collect();
         let mv1: Move = mo.first().unwrap().parse().unwrap();
         let out: Outcome = mo.last().unwrap().parse().unwrap();
-        let mv2: Move = get_move(&mv1, &out);
-        let rscore = round_score(&mv1, &mv2);
-        score = score + rscore;
+        score = score + round_score(&mv1, &get_move(&mv1, &out));
     }
     score
 }
