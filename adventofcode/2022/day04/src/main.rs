@@ -24,8 +24,8 @@ impl FromStr for Range {
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         let lr: Vec<&str> = s.split("-").collect();
         Ok(Range {
-            low: lr[0].parse::<u32>().unwrap(),
-            high: lr[1].parse::<u32>().unwrap(),
+            low: lr[0].parse().unwrap(),
+            high: lr[1].parse().unwrap(),
         })
     }
 }
