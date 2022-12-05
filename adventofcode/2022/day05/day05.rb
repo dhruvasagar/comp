@@ -31,18 +31,10 @@ def apply_moves(lines, stacks)
   end
 end
 
-def part1(lines)
-  sindex = lines.find_index { |line| line.strip.start_with?("1") }
-
-  scount = lines[sindex].split.map(&:strip).size
-  stacks = parse_stacks(lines[0...sindex], scount)
-
-  apply_moves(lines[sindex..], stacks)
+def part1(stacks, moves)
+  apply_moves(moves, stacks)
   stacks.map {|s| s[-1]}.join
 end
-
-lines = read_input
-p part1 lines
 
 def move2(stacks, count, from, to)
   fstr = stacks[from]
@@ -58,14 +50,16 @@ def apply_moves2(lines, stacks)
   end
 end
 
-def part2(lines)
-  sindex = lines.find_index { |line| line.strip.start_with?("1") }
-
-  scount = lines[sindex].split.map(&:strip).size
-  stacks = parse_stacks(lines[0...sindex], scount)
-
-  apply_moves2(lines[sindex..], stacks)
+def part2(stacks, moves)
+  apply_moves2(moves, stacks)
   stacks.map {|s| s[-1]}.join
 end
 
-p part2 lines
+lines = read_input
+sindex = lines.find_index { |line| line.strip.start_with?("1") }
+
+scount = lines[sindex].split.map(&:strip).size
+stacks = parse_stacks(lines[0...sindex], scount)
+
+puts part1 stacks.dup, lines[sindex..]
+puts part2 stacks.dup, lines[sindex..]
