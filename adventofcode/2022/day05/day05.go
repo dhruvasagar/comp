@@ -87,6 +87,7 @@ func part1(stacks []string, moves []Move) string {
     move.apply(stacks)
   }
   s := ""
+  fmt.Println("stacks: ", stacks);
   for _, stack := range(stacks) {
     s = fmt.Sprintf("%s%c", s, stack[len(stack)-1])
   }
