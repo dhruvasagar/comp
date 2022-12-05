@@ -7,8 +7,7 @@ end
 def parse_stacks(lines, count)
   count.times.inject [] do |stacks, i|
     stacks.push lines.inject("") { |stack, line|
-      index = i * 4 + 1
-      stack = line[index] + stack
+      stack = line[i * 4 + 1] + stack
     }.strip
   end
 end
