@@ -16,11 +16,7 @@ fn read_input() -> String {
 }
 
 fn sub(line: String, len: usize) -> usize {
-    if line[0..len].chars().unique().collect::<Vec<_>>().len() == len {
-        return len;
-    }
-
-    let mut idx: usize = 1;
+    let mut idx: usize = 0;
     while idx < line.len() {
         if line[idx..(idx + len)]
             .chars()
