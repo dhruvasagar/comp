@@ -5,7 +5,7 @@ def read_input
 end
 
 def sub(line, len)
-  return len if line[len].chars.uniq.size == len
+  return len if line[0...len].chars.uniq.size == len
 
   idx = 1;
   while idx < line.size
