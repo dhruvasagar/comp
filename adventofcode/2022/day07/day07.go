@@ -1,25 +1,25 @@
 package main
 
 import (
-	"bufio"
-	"fmt"
-	"os"
+  "bufio"
+  "fmt"
+  "os"
   "sort"
   "strings"
   "strconv"
 )
 
 func readInput() []string {
-	lines := []string{}
-	scanner := bufio.NewScanner(os.Stdin)
-	for scanner.Scan() {
-		lines = append(lines, scanner.Text())
-	}
-	return lines
+  lines := []string{}
+  scanner := bufio.NewScanner(os.Stdin)
+  for scanner.Scan() {
+    lines = append(lines, scanner.Text())
+  }
+  return lines
 }
 
 func logCase(num int, out string) {
-	fmt.Printf("Case #%d: %s\n", num, out)
+  fmt.Printf("Case #%d: %s\n", num, out)
 }
 
 type File struct {
@@ -109,7 +109,7 @@ func parseInput(lines []string) Folder {
 
     idx += 1
   }
-	return root
+  return root
 }
 
 func part1(root Folder, limit int) int {
@@ -138,7 +138,7 @@ func part2(root Folder, total_space int, required_space int) int {
 }
 
 func main() {
-	root := parseInput(readInput())
+  root := parseInput(readInput())
   fmt.Println(part1(root, 100000))
   fmt.Println(part2(root, 70000000, 30000000))
 }
