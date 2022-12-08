@@ -3,9 +3,9 @@ import Data.List (sort)
 split :: (a -> Bool) -> [a] -> [[a]]
 split p xs = f xs []
   where f [] agg = [agg]
-        f (y : ys) agg = if p y
-                         then agg : f ys []
-                         else f ys (agg ++ [y])
+        f (y : ys) agg
+          | p y = agg : f ys []
+          | otherwise = f ys (agg ++ [y])
 
 
 part1 :: [String] -> Int
