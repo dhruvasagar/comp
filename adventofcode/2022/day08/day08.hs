@@ -1,5 +1,4 @@
 import Data.Char (digitToInt)
-import Debug.Trace
 
 split :: (a -> Bool) -> [a] -> [[a]]
 split p xs = f xs []
