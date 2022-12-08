@@ -1,8 +1,5 @@
 import Data.Char (isLower, ord)
 
-solve :: [Int] -> Int
-solve = undefined
-
 splitMiddle :: String -> (String, String)
 splitMiddle xs = (xl, xr)
   where mid = div (length xs) 2
