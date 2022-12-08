@@ -29,12 +29,12 @@ visible grid p@(Point x y)
   | otherwise = left || top || right || bottom
   where n = size grid
         h = height p grid
-        left = all f $ zip [0..(x-1)] (repeat y)
-        top = all f $ zip (repeat x) [0..(y-1)]
-        right = all f $ zip [(x+1)..(n-1)] (repeat y)
-        bottom = all f $ zip (repeat x) [(y+1)..(n-1)]
-        f :: (Int, Int) -> Bool
-        f (xi, yi) = height (Point xi yi) grid < h
+        left = all f $ zipWith Point [0..(x-1)] (repeat y)
+        top = all f $ zipWith Point (repeat x) [0..(y-1)]
+        right = all f $ zipWith Point [(x+1)..(n-1)] (repeat y)
+        bottom = all f $ zipWith Point (repeat x) [(y+1)..(n-1)]
+        f :: Point -> Bool
+        f p = height p grid < h
 
 visibleCount :: Grid -> Int
 visibleCount grid = length $ filter (visible grid) points
