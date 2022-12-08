@@ -55,10 +55,10 @@ visibleFrom p grid c (p1:ps)
 scenicScore :: Point -> Grid -> Int
 scenicScore p@(Point x y) grid = product [l, t, r, b]
   where n = size grid
-        l = visibleFrom p grid 0 $ map (uncurry Point) $ zip (reverse [0..(x-1)]) (repeat y)
-        t = visibleFrom p grid 0 $ map (uncurry Point) $ zip (repeat x) (reverse [0..(y-1)])
-        r = visibleFrom p grid 0 $ map (uncurry Point) $ zip [(x+1)..(n-1)] (repeat y)
-        b = visibleFrom p grid 0 $ map (uncurry Point) $ zip (repeat x) [(y+1)..(n-1)]
+        l = visibleFrom p grid 0 $ zipWith Point (reverse [0..(x-1)]) (repeat y)
+        t = visibleFrom p grid 0 $ zipWith Point (repeat x) (reverse [0..(y-1)])
+        r = visibleFrom p grid 0 $ zipWith Point [(x+1)..(n-1)] (repeat y)
+        b = visibleFrom p grid 0 $ zipWith Point (repeat x) [(y+1)..(n-1)]
 
 scenicScoreMax :: Grid -> Int
 scenicScoreMax grid = maximum $ map (\p -> scenicScore p grid) points
