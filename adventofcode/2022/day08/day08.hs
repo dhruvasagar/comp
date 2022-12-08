@@ -49,7 +49,6 @@ visibleFrom p grid c (p1:ps)
   | height p1 grid < height p grid = visibleFrom p grid (c + 1) ps
   | height p1 grid >= height p grid = c + 1
   | otherwise = c
-  where (Point x1 y1) = p
 
 scenicScore :: Point -> Grid -> Int
 scenicScore p@(Point x y) grid = product [l, t, r, b]
