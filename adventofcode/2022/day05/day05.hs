@@ -60,14 +60,9 @@ moveStacks m@(Move { count, from, to }) mfn is
   where fs = is !! (from - 1)
         ts = is !! (to - 1)
         (nfs, nts) = mfn m fs ts
-        f :: Int
-        f
-          | from < to = from
-          | otherwise = to
-        t :: Int
-        t
-          | to > from = to
-          | otherwise = from
+        (f, t)
+          | from < to = (from, to)
+          | otherwise = (to, from)
         bs = take (f - 1) is
         ms = take (t - f - 1) $ drop f is
         as = drop t is
