@@ -1,6 +1,5 @@
 import Data.Char (isSpace)
 import Data.List (partition, transpose)
-import Debug.Trace (trace)
 
 split :: (a -> Bool) -> [a] -> [[a]]
 split p xs = f xs []
