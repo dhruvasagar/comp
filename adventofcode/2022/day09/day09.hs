@@ -25,9 +25,6 @@ dist (Point x1 y1) (Point x2 y2) = maximum [abs (x1 - x2), abs (y1 - y2)]
 data Rope = Rope [Point]
   deriving (Show)
 
-ropeLength :: Rope -> Int
-ropeLength (Rope ps) = length ps
-
 moveHead :: Direction -> Point -> Point
 moveHead LEFT (Point x y) = Point (x-1) y
 moveHead RIGHT (Point x y) = Point (x+1) y
