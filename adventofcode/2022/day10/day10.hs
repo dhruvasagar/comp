@@ -45,10 +45,12 @@ run (Program x is) icn tcn ss = run (Program nx nis) nicn (tcn + 1) nss
 
 indices = [(!! 19), (!! 59), (!! 99), (!! 139), (!! 179), (!! 219)]
 
-part1 :: [Instruction] -> Int
-part1 is = sum $ map (snd . ($ output)) indices
-  where program = (Program 1 is)
-        output = run program 0 1 []
+programOutput :: [Instruction] -> [(Int, Int)]
+programOutput is = run program 0 1 []
+  where program = Program 1 is
+
+part1 :: [(Int, Int)] -> Int
+part1 output = sum $ map (snd . ($ output)) indices
 
 pixel :: Int -> Int -> Char
 pixel p x
@@ -61,10 +63,8 @@ display xs = line ++ "\n" ++ display nxs
   where line = zipWith pixel [0..39] $ take 40 xs
         nxs = drop 40 xs
 
-part2 :: [Instruction] -> Int
-part2 is = (trace (display $ map fst output) 0)
-  where program = (Program 1 is)
-        output = run program 0 1 []
+part2 :: [(Int, Int)] -> Int
+part2 output = (trace (display $ map fst output) 0)
 
 main :: IO ()
-main = interact $ unlines . map show . sequence [part1, part2] . map parseInstruction . lines
+main = interact $ unlines . map show . sequence [part1, part2] . programOutput . map parseInstruction . lines
