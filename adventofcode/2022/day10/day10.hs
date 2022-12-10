@@ -34,29 +34,25 @@ nextInstructions Noop _ (i:is) = is
 nextInstructions (Addx _) 0 is = is
 nextInstructions (Addx _) 1 (i:is) = is
 
-first (a, _, _) = a
-second (_, a, _) = a
-third (_, _, a) = a
-
-run :: Program -> Int -> Int -> [(Int, Int, Int)] -> [(Int, Int, Int)]
+run :: Program -> Int -> Int -> [(Int, Int)] -> [(Int, Int)]
 run (Program x []) _ tcn ss = ss
 run (Program x is) icn tcn ss = run (Program nx nis) nicn (tcn + 1) nss
   where i = head is
         nx = runInstruction i x icn
         nis = nextInstructions i icn is
         nicn = instructionCycleCount i icn
-        nss = ss ++ [(tcn, x, signalStrength tcn x)]
+        nss = ss ++ [(x, signalStrength tcn x)]
 
-indices = [20, 60, 100, 140, 180, 220]
+indices = [(!! 19), (!! 59), (!! 99), (!! 139), (!! 179), (!! 219)]
 
 part1 :: [Instruction] -> Int
-part1 is = sum [third s | s <- output, elem (first s) indices]
+part1 is = sum $ map (snd . ($ output)) indices
   where program = (Program 1 is)
         output = run program 0 1 []
 
 pixel :: Int -> Int -> Char
 pixel p x
-  | abs (p - x) < 2 = '#'
+  | abs (p - x) < 2 = '█'
   | otherwise = ' '
 
 display :: [Int] -> String
@@ -66,7 +62,7 @@ display xs = line ++ "\n" ++ display nxs
         nxs = drop 40 xs
 
 part2 :: [Instruction] -> Int
-part2 is = (trace (display $ map second output) 0)
+part2 is = (trace (display $ map fst output) 0)
   where program = (Program 1 is)
         output = run program 0 1 []
 
