@@ -48,9 +48,12 @@ moveTail head@(Point x1 y1) tail@(Point x2 y2)
           | otherwise = y2
 
 moveOne :: Rope -> Maybe Point -> Direction -> M.Map Point Bool -> Rope -> (Rope, M.Map Point Bool)
-moveOne (Rope [t]) (Just h) dirn hist (Rope ps) = (Rope (ps ++ [moveTail h t]), M.insert (moveTail h t) True hist)
-moveOne (Rope (h:ps)) Nothing dirn hist (Rope []) = moveOne (Rope ps) (Just (moveHead dirn h)) dirn hist (Rope [moveHead dirn h])
-moveOne (Rope (t:ps)) (Just h) dirn hist (Rope rs) = moveOne (Rope ps) (Just (moveTail h t)) dirn hist (Rope (rs ++ [moveTail h t]))
+moveOne (Rope [t]) (Just h) dirn hist (Rope ps) = (Rope (ps ++ [nt]), M.insert nt True hist)
+  where nt = moveTail h t
+moveOne (Rope (h:ps)) Nothing dirn hist (Rope []) = moveOne (Rope ps) (Just nh) dirn hist (Rope [nh])
+  where nh = moveHead dirn h
+moveOne (Rope (t:ps)) (Just h) dirn hist (Rope rs) = moveOne (Rope ps) (Just nt) dirn hist (Rope (rs ++ [nt]))
+  where nt = moveTail h t
 
 move :: Rope -> Move -> M.Map Point Bool -> (Rope, M.Map Point Bool)
 move rope (Move dirn 0) hist = (rope, hist)
