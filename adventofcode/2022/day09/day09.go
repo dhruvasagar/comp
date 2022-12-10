@@ -127,10 +127,24 @@ func parseInput(lines []string) []Move {
 }
 
 func printPoints(points []Point) {
-	minx := -15
-	maxx := 15
-	miny := -15
-	maxy := 15
+	minx := 0
+	maxx := 0
+	miny := 0
+	maxy := 0
+	for _, p := range points {
+		if minx > p.x {
+			minx = p.x
+		}
+		if maxx < p.x {
+			maxx = p.x
+		}
+		if miny > p.y {
+			miny = p.y
+		}
+		if maxy < p.y {
+			maxy = p.y
+		}
+	}
 	for y := miny; y <= maxy; y++ {
 		for x := minx; x <= maxx; x++ {
 			if x == 0 && y == 0 {
@@ -161,24 +175,24 @@ func printPoints(points []Point) {
 }
 
 func printMap(hist map[Point]bool) {
-	minx := -15
-	maxx := 15
-	miny := -15
-	maxy := 15
-	// for p := range hist {
-	// 	if minx > p.x {
-	// 		minx = p.x
-	// 	}
-	// 	if maxx < p.x {
-	// 		maxx = p.x
-	// 	}
-	// 	if miny > p.y {
-	// 		miny = p.y
-	// 	}
-	// 	if maxy < p.y {
-	// 		maxy = p.y
-	// 	}
-	// }
+	minx := 0
+	maxx := 0
+	miny := 0
+	maxy := 0
+	for p := range hist {
+		if minx > p.x {
+			minx = p.x
+		}
+		if maxx < p.x {
+			maxx = p.x
+		}
+		if miny > p.y {
+			miny = p.y
+		}
+		if maxy < p.y {
+			maxy = p.y
+		}
+	}
 	for y := miny; y <= maxy; y++ {
 		for x := minx; x <= maxx; x++ {
 			if x == 0 && y == 0 {
