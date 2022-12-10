@@ -72,9 +72,8 @@ fn run_program(instructions: Vec<Instruction>) -> (Vec<i32>, Vec<i32>) {
     p.run()
 }
 
-fn part1(output: (Vec<i32>, Vec<i32>)) -> i32 {
+fn part1(ss: Vec<i32>) -> i32 {
     let indexes: Vec<usize> = vec![19, 59, 99, 139, 179, 219];
-    let (_, ss) = output;
     let mut res: i32 = 0;
     for i in indexes {
         res += ss[i];
@@ -82,9 +81,8 @@ fn part1(output: (Vec<i32>, Vec<i32>)) -> i32 {
     res
 }
 
-fn part2(output: (Vec<i32>, Vec<i32>)) -> String {
+fn part2(xs: Vec<i32>) -> String {
     let mut s = String::new();
-    let (xs, _) = output;
     for i in 0..6 {
         for j in 0..40 {
             let idx = i * 40 + j;
@@ -103,12 +101,12 @@ fn part2(output: (Vec<i32>, Vec<i32>)) -> String {
 fn main() {
     let s = Instant::now();
     let instructions = read_input();
-    let output = run_program(instructions);
+    let (xs, ss) = run_program(instructions);
     let s1 = Instant::now();
-    println!("{}", part1(output.clone()));
+    println!("{}", part1(ss));
     let e1 = s1.elapsed();
     let s2 = Instant::now();
-    println!("{}", part2(output.clone()));
+    println!("{}", part2(xs));
     let e2 = s2.elapsed();
     let e = s.elapsed();
     println!("Time for part1: {:?}, part2: {:?}, total: {:?}", e1, e2, e);
