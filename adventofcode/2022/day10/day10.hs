@@ -3,10 +3,6 @@ import Debug.Trace (trace)
 data Instruction = Noop | Addx Int
   deriving (Show)
 
-cycleCount :: Instruction -> Int
-cycleCount Noop = 1
-cycleCount (Addx _) = 2
-
 parseInstruction :: String -> Instruction
 parseInstruction s
   | s == "noop" = Noop
