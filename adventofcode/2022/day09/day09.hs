@@ -67,11 +67,23 @@ moveAll rope hist (m:ms) = moveAll nrope nhist ms
 
 part1 :: [Move] -> Int
 part1 = moveAll rope M.empty
-  where rope = Rope [Point 0 0, Point 0 0]
+  where rope = Rope [ Point 0 0
+                    , Point 0 0
+                    ]
 
 part2 :: [Move] -> Int
 part2 = moveAll rope M.empty
-  where rope = Rope [Point 0 0, Point 0 0, Point 0 0, Point 0 0, Point 0 0, Point 0 0, Point 0 0, Point 0 0, Point 0 0, Point 0 0]
+  where rope = Rope [ Point 0 0
+                    , Point 0 0
+                    , Point 0 0
+                    , Point 0 0
+                    , Point 0 0
+                    , Point 0 0
+                    , Point 0 0
+                    , Point 0 0
+                    , Point 0 0
+                    , Point 0 0
+                    ]
 
 main :: IO ()
 main = interact $ unlines . map show . sequence [part1, part2] . map parseMove . lines
