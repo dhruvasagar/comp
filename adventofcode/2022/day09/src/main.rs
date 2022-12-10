@@ -74,9 +74,9 @@ impl Rope {
 
     pub fn apply_move(&mut self, mv: Move, hs: &mut HashSet<Point>) {
         let len = self.len();
+        let knotsclone = Rc::clone(&self.knots);
         for _ in 0..mv.count {
             for idx in 0..len {
-                let knotsclone = Rc::clone(&self.knots);
                 let mut tail = knotsclone.get(idx).unwrap().borrow_mut();
                 if idx == 0 {
                     match mv.direction {
@@ -121,9 +121,27 @@ impl Rope {
 
 #[allow(dead_code)]
 fn print_set(hs: HashSet<Point>) {
+    let mut minx: i32 = 0;
+    let mut maxx: i32 = 0;
+    let mut miny: i32 = 0;
+    let mut maxy: i32 = 0;
+    for p in hs.iter() {
+        if minx > p.x {
+            minx = p.x;
+        }
+        if maxx < p.x {
+            maxx = p.x;
+        }
+        if miny > p.y {
+            miny = p.y;
+        }
+        if maxy < p.y {
+            maxy = p.y;
+        }
+    }
     let mut s = String::new();
-    for y in -6..6 {
-        for x in -11..11 {
+    for y in miny..(maxy + 1) {
+        for x in minx..(maxx + 1) {
             let p = Point { x, y };
             if p == Point::default() {
                 s += "s";
