@@ -35,7 +35,7 @@ nextInstructions (Addx _) 0 is = is
 nextInstructions (Addx _) 1 (i:is) = is
 
 run :: Program -> Int -> Int -> [(Int, Int)] -> [(Int, Int)]
-run (Program x []) _ tcn ss = ss
+run (Program _ []) _ _ ss = ss
 run (Program x is) icn tcn ss = run (Program nx nis) nicn (tcn + 1) nss
   where i = head is
         nx = runInstruction i x icn
