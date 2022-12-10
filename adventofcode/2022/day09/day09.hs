@@ -1,5 +1,4 @@
 import qualified Data.Map as M
-import Debug.Trace (trace)
 
 data Direction = LEFT | UP | RIGHT | DOWN
   deriving (Show)
