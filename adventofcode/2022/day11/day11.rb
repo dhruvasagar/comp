@@ -14,13 +14,15 @@ class Monkey
 
     @op = lines[2].split(' = ').last
     @operation = Proc.new {|n, base|
-      if /old \+ (\d+)/ =~ @op
-        (n + $1.to_i) % base
+      nn = if /old \+ (\d+)/ =~ @op
+        n + $1.to_i
       elsif /old \* (\d+)/ =~ @op
-        (n * $1.to_i) % base
+        n * $1.to_i
       else
-        (n * n) % base
+        n * n
       end
+      nn %= base if base
+      nn
     }
 
     @test = lines[3].split('divisible by').last.to_i
