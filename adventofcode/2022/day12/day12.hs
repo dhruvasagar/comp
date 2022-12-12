@@ -18,11 +18,11 @@ parseGrid ls = Grid start end ls start_points
   where ysize = length ls
         xsize = length $ head ls
         ps = [Point x y | x <- [0..xsize-1], y <- [0..ysize-1]]
-        f :: [String] -> Point -> Char
-        f ss (Point x y) = (ls !! y) !! x
-        (Just start) = find ((== 'S') . (f ls)) ps
-        (Just end) = find ((== 'E') . (f ls)) ps
-        start_points = start : filter ((== 'a') . (f ls)) ps
+        f :: Point -> Char
+        f (Point x y) = (ls !! y) !! x
+        (Just start) = find ((== 'S') . f) ps
+        (Just end) = find ((== 'E') . f) ps
+        start_points = start : filter ((== 'a') . f) ps
 
 bounds :: Grid -> (Int, Int)
 bounds (Grid { points }) = (xsize, ysize)
