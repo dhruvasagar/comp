@@ -113,12 +113,15 @@ playRounds playf base n ms = playRounds playf base (n-1) nms
 
 revSort = sortBy (flip compare)
 
+top2Active :: [Monkey] -> Int
+top2Active = product . take 2 . revSort . map total_inspected
+
 part1 :: [Monkey] -> Int
-part1 ms = product $ take 2 $ revSort $ map total_inspected $ playRounds play base 20 ms
+part1 ms = top2Active $ playRounds play base 20 ms
   where base = product $ map testn ms
 
 part2 :: [Monkey] -> Int
-part2 ms = product $ take 2 $ revSort $ map total_inspected $ playRounds play2 base 10000 ms
+part2 ms = top2Active $ playRounds play2 base 10000 ms
   where base = product $ map testn ms
 
 main :: IO ()
