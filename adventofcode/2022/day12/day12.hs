@@ -1,6 +1,5 @@
 import Data.List (find)
 import Data.Char (ord)
-import Debug.Trace (trace)
 import qualified Data.Map as M
 
 data Point = Point Int Int
