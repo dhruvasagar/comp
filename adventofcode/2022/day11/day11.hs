@@ -1,5 +1,4 @@
 import Data.List (isPrefixOf, sortBy)
-import Debug.Trace (trace)
 
 split :: (a -> Bool) -> [a] -> [[a]]
 split p xs = f xs []
