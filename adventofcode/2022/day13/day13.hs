@@ -26,7 +26,7 @@ instance Ord Packet where
     where ac = zipWith compare a b
 
 newtype Parser a = Parser
-  { runParser ::String -> Maybe (String, a)
+  { runParser :: String -> Maybe (String, a)
   }
 
 instance Functor Parser where
@@ -86,8 +86,11 @@ parseList = List <$> (charP '[' *> ws *> elements <* ws <* charP ']')
 parsePacket :: Parser Packet
 parsePacket = parseAtom <|> parseList
 
+toTuple :: [Packet] -> (Packet, Packet)
+toTuple [p1, p2] = (p1, p2)
+
 parsePair :: [String] -> (Packet, Packet)
-parsePair [p1, p2] = (snd $ fromJust $ (runParser parsePacket) p1, snd $ fromJust $ (runParser parsePacket) p2)
+parsePair = toTuple . map (snd . fromJust . runParser parsePacket)
 
 part1 :: [(Packet, Packet)] -> Int
 part1 = sum . map fst . filter ((/= GT) . snd) .zip [1..] . map (uncurry compare)
