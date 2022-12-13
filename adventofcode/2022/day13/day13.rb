@@ -27,7 +27,7 @@ def compare(a, b)
 end
 
 def part1 packet_pairs
-  packet_pairs.map.with_index(1).filter { |p, i| compare(*p) == -1 }.map(&:last).sum
+  packet_pairs.map.with_index(1).filter { |p, i| compare(*p) <= 0 }.map(&:last).sum
 end
 
 def part2 packet_pairs
