@@ -93,7 +93,7 @@ parsePair :: [String] -> (Packet, Packet)
 parsePair = toTuple . map (snd . fromJust . runParser parsePacket)
 
 part1 :: [(Packet, Packet)] -> Int
-part1 = sum . map fst . filter ((/= GT) . snd) .zip [1..] . map (uncurry compare)
+part1 = sum . map fst . filter ((/= GT) . snd) . zip [1..] . map (uncurry compare)
 
 unTuple :: (Packet, Packet) -> [Packet]
 unTuple (p1, p2) = [p1, p2]
