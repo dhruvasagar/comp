@@ -1,0 +1,29 @@
+# Advent Of Code 2022
+
+| Day | Haskell                      | Rust                            | Ruby                         | Golang                       |
+| --- | ---------------------------- | ------------------------------- | ---------------------------- | ---------------------------- |
+| 1   | [day01.hs](./day01/day01.hs) | [day01.rs](./day01/src/main.rs) | [day01.rb](./day01/day01.rb) | -                            |
+| 2   | [day02.hs](./day02/day02.hs) | [day02.rs](./day02/src/main.rs) | -                            | -                            |
+| 3   | [day03.hs](./day03/day03.hs) | [day03.rs](./day03/src/main.rs) | -                            | -                            |
+| 4   | [day04.hs](./day04/day04.hs) | [day04.rs](./day04/src/main.rs) | -                            | -                            |
+| 5   | [day05.hs](./day05/day05.hs) | [day05.rs](./day05/src/main.rs) | [day05.rb](./day05/day05.rb) | [day05.go](./day05/day05.go) |
+| 6   | [day06.hs](./day06/day06.hs) | [day06.rs](./day06/src/main.rs) | [day06.rb](./day06/day06.rb) | -                            |
+| 7   | -                            | [day07.rs](./day07/src/main.rs) | -                            | [day07.go](./day07/day07.go) |
+| 8   | [day08.hs](./day08/day08.hs) | [day08.rs](./day08/src/main.rs) | [day08.rb](./day08/day08.rb) | -                            |
+| 9   | [day09.hs](./day09/day09.hs) | [day09.rs](./day09/src/main.rs) | -                            | [day09.go](./day09/day09.go) |
+| 10  | [day10.hs](./day10/day10.hs) | [day10.rs](./day10/src/main.rs) | -                            | -                            |
+| 11  | [day11.hs](./day11/day11.hs) | -                               | [day11.rb](./day11/day11.rb) | -                            |
+| 12  | [day12.hs](./day12/day12.hs) | [day12.rs](./day12/src/main.rs) | [day12.rb](./day12/day12.rb) | -                            |
+| 13  | [day13.hs](./day13/day13.hs) | -                               | [day13.rb](./day13/day13.rb) | -                            |
+| 14  | [day14.hs](./day14/day14.hs) | -                               | [day14.rb](./day14/day14.rb) | -                            |
+| 15  | -                            | -                               | -                            | -                            |
+| 16  | -                            | -                               | -                            | -                            |
+| 17  | -                            | -                               | -                            | -                            |
+| 18  | -                            | -                               | -                            | -                            |
+| 19  | -                            | -                               | -                            | -                            |
+| 20  | -                            | -                               | -                            | -                            |
+| 21  | -                            | -                               | -                            | -                            |
+| 22  | -                            | -                               | -                            | -                            |
+| 23  | -                            | -                               | -                            | -                            |
+| 24  | -                            | -                               | -                            | -                            |
+| 25  | -                            | -                               | -                            | -                            |
