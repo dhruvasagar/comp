@@ -37,10 +37,8 @@ def all_paths path_lines
 end
 
 def falling_forever? paths, point
-  xmin, xmax = paths.keys.map(&:first).minmax
-  ymin, ymax = paths.keys.map(&:last).minmax
-  x, y = point
-  return true if x < xmin || x > xmax
+  ymax = paths.keys.map(&:last).max
+  _, y = point
   return true if y > ymax
   false
 end
@@ -87,12 +85,10 @@ def is_not_wall? paths, point
 end
 
 def simulate_sand paths
-  cnt = 0
   sp = [500, 0]
-  resting_sand = {}
   highest_resting_sand = [500, 0]
   while true
-    return cnt if falling_forever?(paths, sp)
+    return if falling_forever?(paths, sp)
 
     np = down sp
     sp = if is_not_wall? paths, np
@@ -103,7 +99,6 @@ def simulate_sand paths
            elsif is_not_wall? paths, right(np)
              right np
            else
-             cnt += 1
              paths[sp] = 'o' # mark as wall
              if highest_resting_sand[1] > sp[1]
                highest_resting_sand[1] = sp[1]
@@ -117,6 +112,7 @@ end
 
 def part1 paths
   simulate_sand paths
+  paths.count {|_, v| v == 'o'}
 end
 
 def visualize_paths_with_floor paths, update
@@ -150,14 +146,13 @@ def is_not_wall_or_floor? paths, floory, point
 end
 
 def simulate_sand_with_floor paths
-  cnt = 0
   sp = [500, 0]
   resting_sand = {}
   highest_resting_sand = [500, 0]
   floory = paths.keys.map(&:last).max + 2
   while true
     # return cnt if falling_forever?(paths, sp)
-    return cnt if paths[[500, 0]] == 'o'
+    return if paths[[500, 0]] == 'o'
 
     np = down sp
     sp = if is_not_wall_or_floor? paths, floory, np
@@ -168,7 +163,6 @@ def simulate_sand_with_floor paths
            elsif is_not_wall_or_floor? paths, floory, right(np)
              right np
            else
-             cnt += 1
              paths[sp] = 'o' # mark as wall
              if highest_resting_sand[1] > sp[1]
                highest_resting_sand[1] = sp[1]
