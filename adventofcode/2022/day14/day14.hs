@@ -63,9 +63,6 @@ chunksOf :: Int -> [a] -> [[a]]
 chunksOf _ [] = []
 chunksOf n xs = (take n xs) : (chunksOf n (drop n xs))
 
-join :: String -> [String] -> String
-join c = foldl (\s l -> s ++ l ++ c) ""
-
 printMap :: M.Map Point Char -> String
 printMap m = unlines $ chunksOf (xmax - xmin + 1) $ map f ps
   where ks = M.keys m
@@ -96,6 +93,20 @@ isNotWallOrFloor :: M.Map Point Char -> Int -> Point -> Bool
 isNotWallOrFloor m ymax p@(Point x y)
   | y == ymax = False
   | otherwise = isNotWall m p
+
+printMapWithFloor :: M.Map Point Char -> Int -> String
+printMapWithFloor m fy = unlines $ chunksOf (xmax - xmin + 1) $ map f ps
+  where ks = M.keys m
+        xmin = minimum $ map (\(Point x _) -> x) ks
+        xmax = maximum $ map (\(Point x _) -> x) ks
+        ymin = minimum $ map (\(Point _ y) -> y) ks
+        ymax = maximum $ map (\(Point _ y) -> y) ks
+        ps = [Point x y | y <- [0..(ymax + 2)], x <- [xmin..xmax]]
+        f :: Point -> Char
+        f p@(Point _ y)
+          | y == fy = '#'
+          | p == (Point 500 0) = '+'
+          | otherwise = maybe '.' id (M.lookup p m)
 
 simulateSandWithFloor :: M.Map Point Char -> Int -> Point -> Int
 simulateSandWithFloor m ymax p
