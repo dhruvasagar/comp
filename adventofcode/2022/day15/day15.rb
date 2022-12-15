@@ -62,7 +62,7 @@ def part2 sensors
         # next unless (0..20).include?(x) && (0..20).include?(y)
         next unless (0..4000000).include?(x) && (0..4000000).include?(y)
 
-        return tuning_frequency(point) if sensors.all? { |p, b| mdist(p, point) > b[:range] }
+        return tuning_frequency(point) unless cannot_have_beacon?(sensors, point)
       end
     end
   end
