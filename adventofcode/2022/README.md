@@ -15,7 +15,7 @@
 | 11  | [day11.hs](./day11/day11.hs) | -                               | [day11.rb](./day11/day11.rb) | -                            |
 | 12  | [day12.hs](./day12/day12.hs) | [day12.rs](./day12/src/main.rs) | [day12.rb](./day12/day12.rb) | -                            |
 | 13  | [day13.hs](./day13/day13.hs) | -                               | [day13.rb](./day13/day13.rb) | -                            |
-| 14  | [day14.hs](./day14/day14.hs) | -                               | [day14.rb](./day14/day14.rb) | -                            |
+| 14  | [day14.hs](./day14/day14.hs) | [day14.rs](./day14/src/main.rs) | [day14.rb](./day14/day14.rb) | [day14.go](./day14/day14.go) |
 | 15  | -                            | -                               | -                            | -                            |
 | 16  | -                            | -                               | -                            | -                            |
 | 17  | -                            | -                               | -                            | -                            |

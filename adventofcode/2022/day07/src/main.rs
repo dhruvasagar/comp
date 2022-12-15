@@ -47,7 +47,7 @@ fn read_input() -> Vec<String> {
     stdin.lock().lines().map(|x| x.unwrap()).collect()
 }
 
-fn parse_input<'a>(lines: Vec<String>) -> Rc<RefCell<Folder>> {
+fn parse_input(lines: Vec<String>) -> Rc<RefCell<Folder>> {
     let root = Rc::new(RefCell::new(Folder {
         name: String::from("/"),
         parent: None,
