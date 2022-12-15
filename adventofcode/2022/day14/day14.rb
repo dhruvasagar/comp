@@ -147,7 +147,6 @@ end
 
 def simulate_sand_with_floor paths
   sp = [500, 0]
-  resting_sand = {}
   highest_resting_sand = [500, 0]
   floory = paths.keys.map(&:last).max + 2
   while true

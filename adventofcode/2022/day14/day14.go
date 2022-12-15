@@ -77,13 +77,7 @@ func parsePaths(lines []string) map[Point]rune {
 	return paths
 }
 
-func fallingForever(paths map[Point]rune, p Point) bool {
-	ymax := 0
-	for pi := range paths {
-		if ymax < pi.y {
-			ymax = pi.y
-		}
-	}
+func fallingForever(ymax int, p Point) bool {
 	return p.y > ymax
 }
 
@@ -92,11 +86,11 @@ func isNotWall(paths map[Point]rune, p Point) bool {
 	return !ok
 }
 
-func simulateSand(paths map[Point]rune) {
+func simulateSand(paths map[Point]rune, ymax int) {
 	ymin := 0
 	p := Point{x: 500, y: 0}
 	for {
-		if fallingForever(paths, p) {
+		if fallingForever(ymax, p) {
 			return
 		}
 
@@ -130,7 +124,13 @@ func countResting(paths map[Point]rune) int {
 }
 
 func part1(paths map[Point]rune) int {
-	simulateSand(paths)
+	ymax := 0
+	for p := range paths {
+		if ymax < p.y {
+			ymax = p.y
+		}
+	}
+	simulateSand(paths, ymax)
 	return countResting(paths)
 }
 
