@@ -33,13 +33,14 @@ def cannot_have_beacon? sensors, point
   end
 end
 
-def count_pos_without_beacon sensors, y
-  xmin, xmax = sensors.flat_map {|p, b| [p[0], p[0] - b[:range], p[0] + b[:range]]}.minmax
+def count_pos_without_beacon sensors, xmm, y
+  xmin, xmax = xmm
   (xmin..xmax).count { |xi| cannot_have_beacon?(sensors, [xi, y]) }
 end
 
 def part1 sensors
-  count_pos_without_beacon sensors, 2000000
+  xmm = sensors.flat_map {|p, b| [p[0], p[0] - b[:range], p[0] + b[:range]]}.minmax
+  count_pos_without_beacon sensors, xmm, 2000000
 end
 
 def tuning_frequency point
@@ -48,12 +49,12 @@ def tuning_frequency point
 end
 
 def part2 sensors
-  res = []
-  found = false
   sensors.each do |sp, b|
     sx, sy = sp
+    # search for points range+1 distance away from sensors
     (0..(b[:range]+1)).each do |dx|
       dy = b[:range] + 1 - dx
+
       [[-1, -1], [-1, 1], [1, -1], [1, 1]].each do |signx, signy|
         x, y = [sx + (dx * signx), sy + (dy * signy)]
         point = [x, y]
@@ -61,16 +62,10 @@ def part2 sensors
         # next unless (0..20).include?(x) && (0..20).include?(y)
         next unless (0..4000000).include?(x) && (0..4000000).include?(y)
 
-        if sensors.all? { |p, b| mdist(p, point) > b[:range] }
-          res = point
-          found = true
-        end
+        return tuning_frequency(point) if sensors.all? { |p, b| mdist(p, point) > b[:range] }
       end
-      break if found
     end
-    break if found
   end
-  tuning_frequency(res)
 end
 
 sensors = parse_input read_input
