@@ -111,6 +111,23 @@ func tuning_frequency(p Point) int64 {
 }
 
 func part2(sensors map[Point]Sensor) int64 {
+	xmax := 0
+	ymax := 0
+	for p := range sensors {
+		if xmax < p.x {
+			xmax = p.x
+		}
+		if ymax < p.y {
+			ymax = p.y
+		}
+	}
+	if xmax > 4000000 {
+		xmax = 4000000
+	}
+	if ymax > 4000000 {
+		ymax = 4000000
+	}
+
 	pchan := make(chan Point)
 	pdiffs := [][]int{{-1, -1}, {-1, 1}, {1, -1}, {1, 1}}
 	for _, s := range sensors {
@@ -122,7 +139,7 @@ func part2(sensors map[Point]Sensor) int64 {
 					y := s.pos.y + dy*sxy[1]
 					point := Point{x, y}
 
-					if x < 0 || x > 4000000 || y < 0 || y > 4000000 {
+					if x < 0 || x > xmax || y < 0 || y > xmax {
 						continue
 					}
 
