@@ -18,7 +18,7 @@ def parse_input lines
 end
 
 class Pipes
-  attr_reader :dp, :mem, :valves
+  attr_reader :dp, :valves
 
   def initialize(valves)
     @mem = {}
@@ -43,16 +43,6 @@ class Pipes
       valves[v][:rate] * (t - dp[[u,v]] - 1) + search(t - dp[[u,v]] - 1, vs-[v], v, e) if dp[[u,v]] < t
     end.compact + [e ? search(26, vs) : 0]).max
   end
-end
-
-def part1 valves
-  f = {}
-  valves.each { |n, v| f[n] = v[:rate] if v[:rate] != 0 }
-  pipes = Pipes.new(valves)
-  [
-    pipes.search(30, f.keys),
-    pipes.search(26, f.keys, 'AA', true),
-  ]
 end
 
 f = {}
