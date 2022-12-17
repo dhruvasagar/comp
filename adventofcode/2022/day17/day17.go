@@ -287,26 +287,28 @@ func (c *Chamber) play(moves string, limit int) int64 {
 	for cnt < limit {
 		m := rune(moves[midx])
 
-		key := CacheKey{
-			midx:    midx,
-			ridx:    ridx,
-			heights: c.getHeights(),
-		}
-		value := CacheValue{
-			cnt:    cnt,
-			height: c.height(),
-		}
+		if !cycle_found {
+			key := CacheKey{
+				midx:    midx,
+				ridx:    ridx,
+				heights: c.getHeights(),
+			}
+			value := CacheValue{
+				cnt:    cnt,
+				height: c.height(),
+			}
 
-		if last, ok := cache[key]; !cycle_found && ok {
-			cycle_length := cnt - last.cnt
-			cycles_to_go := (limit - cnt) / cycle_length
+			if last, ok := cache[key]; ok {
+				cycle_length := cnt - last.cnt
+				cycles_to_go := (limit - cnt) / cycle_length
 
-			cnt += cycles_to_go * cycle_length
-			height_gained = int64(cycles_to_go) * (value.height - last.height)
-			cycle_found = true
+				cnt += cycles_to_go * cycle_length
+				height_gained = int64(cycles_to_go) * (value.height - last.height)
+				cycle_found = true
+			}
+
+			cache[key] = value
 		}
-
-		cache[key] = value
 
 		if m == Left {
 			if c.canMoveLeft(rock) {
