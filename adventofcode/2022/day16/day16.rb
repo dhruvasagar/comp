@@ -45,9 +45,8 @@ class Pipes
   end
 end
 
-f = {}
 valves = parse_input read_input
-valves.each { |n, v| f[n] = v[:rate] if v[:rate] != 0 }
+f = valves.reduce([]) { |h, (n, v)| h << n if v[:rate] != 0; h }
 pipes = Pipes.new(valves)
-p pipes.search(30, f.keys)
-p pipes.search(26, f.keys, 'AA', true)
+p pipes.search(30, f)
+p pipes.search(26, f, 'AA', true)
