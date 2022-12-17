@@ -281,6 +281,9 @@ func (c *Chamber) play(moves string, limit int) int64 {
 	rock := rocks[ridx]
 	rock = c.enter(rock)
 
+	mlen := len(moves)
+	rlen := len(rocks)
+
 	for cnt < limit {
 		m := rune(moves[midx])
 
@@ -325,18 +328,12 @@ func (c *Chamber) play(moves string, limit int) int64 {
 			// come to rest
 			c.push(rock)
 
-			ridx += 1
-			if ridx == len(rocks) {
-				ridx = 0
-			}
+			ridx = (ridx + 1) % rlen
 			rock = rocks[ridx]
 			rock = c.enter(rock)
 		}
 
-		midx += 1
-		if midx == len(moves) {
-			midx = 0
-		}
+		midx = (midx + 1) % mlen
 	}
 
 	return c.height() + height_gained
