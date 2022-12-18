@@ -6,6 +6,7 @@ import (
 	"os"
 	"strconv"
 	"strings"
+	"time"
 )
 
 func readInput() []string {
@@ -168,7 +169,14 @@ func part2(cubes []Cube) int {
 }
 
 func main() {
+	s := time.Now()
 	cubes := parseInput(readInput())
+	s1 := time.Now()
 	fmt.Println(part1(cubes))
+	e1 := time.Since(s1)
+	s2 := time.Now()
 	fmt.Println(part2(cubes))
+	e2 := time.Since(s2)
+	e := time.Since(s)
+	fmt.Printf("Time for part1: %s, part2: %s, total: %s\n", e1, e2, e)
 }
