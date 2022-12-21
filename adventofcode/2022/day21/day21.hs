@@ -3,7 +3,19 @@ import Data.Maybe (fromJust)
 import Debug.Trace (trace)
 
 type Name = String
-type Operator = Char
+
+data Operator
+    = Plus
+    | Minus
+    | Mul
+    | Div
+    deriving (Show)
+
+parseOperator :: String -> Operator
+parseOperator "+" = Plus
+parseOperator "-" = Minus
+parseOperator "*" = Mul
+parseOperator "/" = Div
 
 data Job
     = YellNumber Int
@@ -22,16 +34,16 @@ parseJob jobs js
     key = init $ head ws
     yn = YellNumber $ read $ last ws
     val = tail ws
-    ym = YellMathOperation (head val) (head $ head $ drop 1 val) (last val)
+    ym = YellMathOperation (head val) (parseOperator $ head $ drop 1 val) (last val)
 
 parseJobs :: [String] -> Jobs
 parseJobs js = foldl parseJob M.empty js
 
 operate :: Operator -> Int -> Int -> Int
-operate '+' a b = a + b
-operate '-' a b = a - b
-operate '*' a b = a * b
-operate '/' a b = a `div` b
+operate Plus a b = a + b
+operate Minus a b = a - b
+operate Mul a b = a * b
+operate Div a b = a `div` b
 
 calc :: Name -> Int -> Jobs -> Int
 calc name humn jobs
