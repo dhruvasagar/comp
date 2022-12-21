@@ -22,7 +22,7 @@
 | 18  | -                            | -                               | -                            | [day18.go](./day18/day18.go) |
 | 19  | -                            | [day19.rs](./day19/src/main.rs) | -                            | -                            |
 | 20  | [day20.hs](./day20/day20.hs) | -                               | [day20.rb](./day20/day20.rb) | -                            |
-| 21  | -                            | -                               | [day21.rb](./day21/day21.rb) | -                            |
+| 21  | [day21.hs](./day21/day21.hs) | -                               | [day21.rb](./day21/day21.rb) | -                            |
 | 22  | -                            | -                               | -                            | -                            |
 | 23  | -                            | -                               | -                            | -                            |
 | 24  | -                            | -                               | -                            | -                            |
