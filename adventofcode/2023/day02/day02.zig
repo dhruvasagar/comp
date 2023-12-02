@@ -10,7 +10,7 @@ const Set = struct {
 
     const Self = @This();
 
-    fn possible(self: *const Self) bool {
+    fn possible(self: Self) bool {
         return self.red <= p1mset.red and self.green <= p1mset.green and self.blue <= p1mset.blue;
     }
 
@@ -40,7 +40,7 @@ const Set = struct {
         self.green = if (self.green > s.green) self.green else s.green;
     }
 
-    fn score(self: *Self) u32 {
+    fn score(self: Self) u32 {
         return self.red * self.blue * self.green;
     }
 };
@@ -58,11 +58,8 @@ pub fn main() !void {
 
         const l = line.?;
         var it = std.mem.splitScalar(u8, l, ':');
-        const gidstr = it.next().?[5..];
-        const gid = std.fmt.parseInt(u16, gidstr, 10) catch 0;
-        const setstr = it.next().?;
-
-        var sit = std.mem.splitScalar(u8, setstr, ';');
+        const gid = std.fmt.parseInt(u16, it.next().?[5..], 10) catch 0;
+        var sit = std.mem.splitScalar(u8, it.next().?, ';');
         var gset = Set{ .red = 0, .blue = 0, .green = 0 };
         var possible = true;
         while (sit.next()) |ss| {
