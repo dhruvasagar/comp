@@ -23,13 +23,9 @@ const Set = struct {
             var scit = std.mem.splitScalar(u8, std.mem.trim(u8, sc, " "), ' ');
             const n = std.fmt.parseInt(u16, scit.next().?, 10) catch 0;
             const c = scit.next().?;
-            if (std.mem.eql(u8, c, "red")) {
-                r = n;
-            } else if (std.mem.eql(u8, c, "blue")) {
-                b = n;
-            } else if (std.mem.eql(u8, c, "green")) {
-                g = n;
-            }
+            if (std.mem.eql(u8, c, "red")) r = n;
+            if (std.mem.eql(u8, c, "blue")) b = n;
+            if (std.mem.eql(u8, c, "green")) g = n;
         }
         return Self{ .red = r, .blue = b, .green = g };
     }
