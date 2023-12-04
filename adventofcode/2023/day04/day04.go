@@ -52,31 +52,25 @@ func completed(unprocessed map[int]int) bool {
 }
 
 func play(cards []Card) int {
-	processed := make(map[int]int)
-	unprocessed := make(map[int]int)
+	chash := make(map[int]Card)
+	whash := make(map[int]int)
 	for _, card := range cards {
-		processed[card.id] = 0
-		unprocessed[card.id] = 1
+		chash[card.id] = card
+		whash[card.id] = card.won()
 	}
-	for !completed(unprocessed) {
-		for _, card := range cards {
-			// fmt.Println("card.id", card.id)
-			uc := unprocessed[card.id]
-			if uc == 0 {
-				continue
-			}
-
-			processed[card.id]++
-			unprocessed[card.id]--
-			win := card.won()
-			for idx := card.id + 1; idx < (card.id + 1 + win); idx++ {
-				unprocessed[idx]++
-			}
-		}
+	queue := []int{}
+	for _, card := range cards {
+		queue = append(queue, card.id)
 	}
 	r := 0
-	for _, v := range processed {
-		r += v
+	for len(queue) != 0 {
+		r += 1
+		top := queue[0]
+		tcard := chash[top]
+		queue = queue[1:]
+		for i := tcard.id + 1; i < tcard.id+1+whash[top]; i++ {
+			queue = append(queue, i)
+		}
 	}
 	return r
 }
