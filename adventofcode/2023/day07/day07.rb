@@ -30,13 +30,16 @@ def rank(hands)
   }
 end
 
-def part1(lines)
-  hands = rank(lines)
+def total_winnings(hands)
   hands.each_index.reduce(0) {|score, index|
     hand = hands[index]
     bet = hand.split.last.to_i
     score + (bet * (index + 1))
   }
+end
+
+def part1(lines)
+  total_winnings(rank(lines))
 end
 
 STRENGTHS2 = [ 'J', '2', '3', '4', '5', '6', '7', '8', '9', 'T', 'Q', 'K', 'A' ]
@@ -70,12 +73,7 @@ def rank2(hands)
 end
 
 def part2(lines)
-  hands = rank2(lines)
-  hands.each_index.reduce(0) {|score, index|
-    hand = hands[index]
-    bet = hand.split.last.to_i
-    score + (bet * (index + 1))
-  }
+  total_winnings(rank2(lines))
 end
 
 s = Process.clock_gettime(Process::CLOCK_MONOTONIC, :nanosecond)
