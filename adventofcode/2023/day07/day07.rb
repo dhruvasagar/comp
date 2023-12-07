@@ -6,23 +6,25 @@ end
 
 STRENGTHS = [ '2', '3', '4', '5', '6', '7', '8', '9', 'T', 'J', 'Q', 'K', 'A' ]
 
-def strength(hand)
-  s = 0
+def score(hand)
   mem = Hash.new(1)
-  hand.chars.each { |h|
+  hand.chars.reduce(0) { |s, h|
     mem[h] += 1
     s += mem[h]
   }
-  s
+end
+
+def smap(hand, order)
+  hand.chars.map {|hi| order.index(hi)}
 end
 
 def rank(hands)
   hands.sort {|a, b|
     ahand = a.split.first
     bhand = b.split.first
-    as = strength(ahand)
-    bs = strength(bhand)
-    next ahand.chars.map {|ai| STRENGTHS.index(ai)} <=> bhand.chars.map {|bi| STRENGTHS.index(bi)} if as == bs
+    as = score(ahand)
+    bs = score(bhand)
+    next smap(ahand, STRENGTHS) <=> smap(bhand, STRENGTHS) if as == bs
 
     as <=> bs
   }
@@ -59,9 +61,9 @@ def rank2(hands)
   hands.sort {|a, b|
     ahand = a.split.first
     bhand = b.split.first
-    as = strength(best(ahand))
-    bs = strength(best(bhand))
-    next ahand.chars.map {|ai| STRENGTHS2.index(ai)} <=> bhand.chars.map {|bi| STRENGTHS2.index(bi)} if as == bs
+    as = score(best(ahand))
+    bs = score(best(bhand))
+    next smap(ahand, STRENGTHS2) <=> smap(bhand, STRENGTHS2) if as == bs
 
     as <=> bs
   }
@@ -76,6 +78,9 @@ def part2(lines)
   }
 end
 
+s = Process.clock_gettime(Process::CLOCK_MONOTONIC, :nanosecond)
 lines = read_input
 p part1(lines)
 p part2(lines)
+e = Process.clock_gettime(Process::CLOCK_MONOTONIC, :nanosecond)
+puts "Time taken: #{(e - s) / 1000000}ms"
