@@ -4,7 +4,7 @@ def read_input
   ARGF.readlines
 end
 
-STRENGTHS = [ '2', '3', '4', '5', '6', '7', '8', '9', 'T', 'J', 'Q', 'K', 'A' ]
+CARDS = [ '2', '3', '4', '5', '6', '7', '8', '9', 'T', 'J', 'Q', 'K', 'A' ]
 
 def score(hand)
   mem = Hash.new(1)
@@ -18,21 +18,21 @@ def smap(hand, order)
   hand.chars.map {|hi| order.index(hi)}
 end
 
-def rank(hands)
-  hands.sort {|a, b|
+def rank(lines, order = CARDS, joker = false)
+  lines.sort {|a, b|
     ahand = a.split.first
     bhand = b.split.first
-    as = score(ahand)
-    bs = score(bhand)
-    next smap(ahand, STRENGTHS) <=> smap(bhand, STRENGTHS) if as == bs
+    as = score(joker ? best(ahand) : ahand)
+    bs = score(joker ? best(bhand) : bhand)
+    next smap(ahand, order) <=> smap(bhand, order) if as == bs
 
     as <=> bs
   }
 end
 
-def total_winnings(hands)
-  hands.each_index.reduce(0) {|score, index|
-    hand = hands[index]
+def total_winnings(lines)
+  lines.each_index.reduce(0) {|score, index|
+    hand = lines[index]
     bet = hand.split.last.to_i
     score + (bet * (index + 1))
   }
@@ -42,7 +42,7 @@ def part1(lines)
   total_winnings(rank(lines))
 end
 
-STRENGTHS2 = [ 'J', '2', '3', '4', '5', '6', '7', '8', '9', 'T', 'Q', 'K', 'A' ]
+CARDS_2 = [ 'J', '2', '3', '4', '5', '6', '7', '8', '9', 'T', 'Q', 'K', 'A' ]
 
 def best(hand)
   if hand.chars.any? {|c| c == 'J'}
@@ -50,30 +50,15 @@ def best(hand)
       .chars
       .reject {|c| c == 'J'}
       .reduce(Hash.new(0)) {|h, c| h[c] += 1; h}
-    bestc = if mem.values.max == 1
-      hand.chars.sort_by {|c| STRENGTHS2.index(c)}.last
-    else
-      hand.chars.sort_by {|c| mem[c]}.last
-    end
+    memmax = mem.values.max
+    bestc = hand.chars.sort_by {|c| memmax == 1 ? CARDS_2.index(c) : mem[c]}.last
     return hand.gsub('J', bestc)
   end
   hand
 end
 
-def rank2(hands)
-  hands.sort {|a, b|
-    ahand = a.split.first
-    bhand = b.split.first
-    as = score(best(ahand))
-    bs = score(best(bhand))
-    next smap(ahand, STRENGTHS2) <=> smap(bhand, STRENGTHS2) if as == bs
-
-    as <=> bs
-  }
-end
-
 def part2(lines)
-  total_winnings(rank2(lines))
+  total_winnings(rank(lines, CARDS_2, true))
 end
 
 s = Process.clock_gettime(Process::CLOCK_MONOTONIC, :nanosecond)
