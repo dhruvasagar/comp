@@ -5,6 +5,7 @@ def read_input
 end
 
 CARDS = [ '2', '3', '4', '5', '6', '7', '8', '9', 'T', 'J', 'Q', 'K', 'A' ]
+CARDS_2 = [ 'J', '2', '3', '4', '5', '6', '7', '8', '9', 'T', 'Q', 'K', 'A' ]
 
 def score(hand)
   mem = Hash.new(1)
@@ -16,6 +17,19 @@ end
 
 def smap(hand, order)
   hand.chars.map {|hi| order.index(hi)}
+end
+
+def best(hand)
+  if hand.chars.any? {|c| c == 'J'}
+    mem = hand
+      .chars
+      .reject {|c| c == 'J'}
+      .reduce(Hash.new(0)) {|h, c| h[c] += 1; h}
+    memmax = mem.values.max
+    bestc = hand.chars.sort_by {|c| memmax == 1 ? CARDS_2.index(c) : mem[c]}.last
+    return hand.gsub('J', bestc)
+  end
+  hand
 end
 
 def rank(lines, order = CARDS, joker = false)
@@ -40,21 +54,6 @@ end
 
 def part1(lines)
   total_winnings(rank(lines))
-end
-
-CARDS_2 = [ 'J', '2', '3', '4', '5', '6', '7', '8', '9', 'T', 'Q', 'K', 'A' ]
-
-def best(hand)
-  if hand.chars.any? {|c| c == 'J'}
-    mem = hand
-      .chars
-      .reject {|c| c == 'J'}
-      .reduce(Hash.new(0)) {|h, c| h[c] += 1; h}
-    memmax = mem.values.max
-    bestc = hand.chars.sort_by {|c| memmax == 1 ? CARDS_2.index(c) : mem[c]}.last
-    return hand.gsub('J', bestc)
-  end
-  hand
 end
 
 def part2(lines)
