@@ -32,24 +32,28 @@ parseInput xs = (steps, m)
     rs = tail xs
     m = foldr (\r m -> parseMap r m) M.empty rs
 
-follow :: (String, Map) -> Node -> (Node -> Bool) -> Int -> Int
-follow ((x : xs), m) start done count
+hop :: (String, Map) -> (Node -> Bool) -> Int -> Node -> Int
+hop ((x : xs), m) done count start
     | done start = count
-    | x == 'L' = follow (xs ++ [x], m) left done ncount
-    | otherwise = follow (xs ++ [x], m) right done ncount
+    | x == 'L' = hop (xs ++ [x], m) done ncount left
+    | otherwise = hop (xs ++ [x], m) done ncount right
   where
     ncount = count + 1
     (Just (Pair left right)) = M.lookup start m
 
 part1 :: (String, Map) -> Int
-part1 sm = follow sm (Node "AAA") (\n -> n == Node "ZZZ") 0
+part1 sm = hop sm done 0 (Node "AAA")
+  where
+    done = (== Node "ZZZ")
 
 part2 :: (String, Map) -> Int
 part2 sm@(xs, m) = foldr (\c acc -> lcm acc c) 1 counts
   where
     mkeys = M.keys m
-    starts = filter (\(Node s) -> isSuffixOf "A" s) mkeys
-    counts = map (\s -> follow sm s (\(Node e) -> isSuffixOf "Z" e) 0) starts
+    isStart (Node s) = isSuffixOf "A" s
+    starts = filter isStart mkeys
+    done (Node e) = isSuffixOf "Z" e
+    counts = map (hop sm done 0) starts
 
 main :: IO ()
 main = interact $ unlines . map show . sequence [part1, part2] . parseInput . lines
