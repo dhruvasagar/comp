@@ -30,7 +30,7 @@ parseInput xs = (steps, m)
   where
     steps = head xs
     rs = tail xs
-    m = foldr (\r m -> parseMap r m) M.empty rs
+    m = foldr parseMap M.empty rs
 
 hop :: (String, Map) -> (Node -> Bool) -> Int -> Node -> Int
 hop ((x : xs), m) done count start
@@ -47,11 +47,10 @@ part1 sm = hop sm done 0 (Node "AAA")
     done = (== Node "ZZZ")
 
 part2 :: (String, Map) -> Int
-part2 sm@(xs, m) = foldr (\c acc -> lcm acc c) 1 counts
+part2 sm@(xs, m) = foldr lcm 1 counts
   where
     mkeys = M.keys m
-    isStart (Node s) = isSuffixOf "A" s
-    starts = filter isStart mkeys
+    starts = filter (\(Node s) -> isSuffixOf "A" s) mkeys
     done (Node e) = isSuffixOf "Z" e
     counts = map (hop sm done 0) starts
 
