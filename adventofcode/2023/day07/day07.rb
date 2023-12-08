@@ -20,16 +20,15 @@ def smap(hand, order)
 end
 
 def best(hand)
-  if hand.chars.any? {|c| c == 'J'}
-    mem = hand
-      .chars
-      .reject {|c| c == 'J'}
-      .reduce(Hash.new(0)) {|h, c| h[c] += 1; h}
-    memmax = mem.values.max
-    bestc = hand.chars.sort_by {|c| memmax == 1 ? CARDS_2.index(c) : mem[c]}.last
-    return hand.gsub('J', bestc)
-  end
-  hand
+  return hand unless hand.chars.any? {|c| c == 'J'}
+
+  mem = hand
+    .chars
+    .reject {|c| c == 'J'}
+    .reduce(Hash.new(0)) {|h, c| h[c] += 1; h}
+  memmax = mem.values.max
+  bestc = hand.chars.sort_by {|c| memmax == 1 ? CARDS_2.index(c) : mem[c]}.last
+  hand.gsub('J', bestc)
 end
 
 def rank(lines, order = CARDS, joker = false)
