@@ -116,7 +116,7 @@ const DestMap = struct {
 pub fn main() !void {
     const s = time.microTimestamp();
 
-    var input: [100000]u8 = undefined;
+    var input: [20000]u8 = undefined;
     _ = try std.io.getStdIn().readAll(&input);
 
     const destMap = DestMap.parse(&input, std.heap.page_allocator);
