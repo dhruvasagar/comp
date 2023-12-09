@@ -35,11 +35,7 @@ fn part1(nums: Vec<Vec<i32>>) -> i32 {
 
 fn part2(nums: Vec<Vec<i32>>) -> i32 {
     nums.iter()
-        .map(|x| {
-            let mut xc = x.clone();
-            xc.reverse();
-            next(xc)
-        })
+        .map(|x| next(x.into_iter().rev().map(|&i| i).collect()))
         .sum()
 }
 
