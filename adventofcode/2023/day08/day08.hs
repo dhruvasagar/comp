@@ -2,14 +2,13 @@ import Data.List (isSuffixOf)
 import qualified Data.Map as M
 import Debug.Trace (trace)
 
-data Node = Node String
-    deriving (Show, Eq, Ord)
+type Node = String
 
 data Pair = Pair Node Node
     deriving (Show)
 
 parsePair :: String -> Pair
-parsePair xs = Pair (Node left) (Node right)
+parsePair xs = Pair left right
   where
     ps = words xs
     left = init $ tail $ head ps
@@ -22,7 +21,7 @@ parseMap [] m = m
 parseMap xs m = M.insert node pair m
   where
     ps = words xs
-    node = Node $ head ps
+    node = head ps
     pair = parsePair $ unwords $ tail $ tail ps
 
 parseInput :: [String] -> (String, Map)
@@ -42,16 +41,16 @@ hop ((x : xs), m) done count start
     (Just (Pair left right)) = M.lookup start m
 
 part1 :: (String, Map) -> Int
-part1 sm = hop sm done 0 (Node "AAA")
+part1 sm = hop sm done 0 "AAA"
   where
-    done = (== Node "ZZZ")
+    done = (== "ZZZ")
 
 part2 :: (String, Map) -> Int
 part2 sm@(xs, m) = foldr lcm 1 counts
   where
     mkeys = M.keys m
-    starts = filter (\(Node s) -> isSuffixOf "A" s) mkeys
-    done (Node e) = isSuffixOf "Z" e
+    starts = filter (isSuffixOf "A") mkeys
+    done = isSuffixOf "Z"
     counts = map (hop sm done 0) starts
 
 main :: IO ()
