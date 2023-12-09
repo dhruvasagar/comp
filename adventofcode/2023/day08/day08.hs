@@ -50,8 +50,7 @@ part2 sm@(xs, m) = foldr lcm 1 counts
   where
     mkeys = M.keys m
     starts = filter (isSuffixOf "A") mkeys
-    done = isSuffixOf "Z"
-    counts = map (hop sm done 0) starts
+    counts = map (hop sm (isSuffixOf "Z") 0) starts
 
 main :: IO ()
 main = interact $ unlines . map show . sequence [part1, part2] . parseInput . lines
