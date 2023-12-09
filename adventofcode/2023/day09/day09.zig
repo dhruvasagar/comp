@@ -23,10 +23,10 @@ fn predictNext(nums: ArrayList) i32 {
 
 fn predictPrev(nums: ArrayList) i32 {
     const ndiffs = diffs(nums);
-    const areZeroes = for (ndiffs.items) |ndiff| {
+    const allZeroes = for (ndiffs.items) |ndiff| {
         if (ndiff != 0) break false;
     } else true;
-    if (areZeroes) return nums.items[0];
+    if (allZeroes) return nums.items[0];
 
     return nums.items[0] - predictPrev(ndiffs);
 }
