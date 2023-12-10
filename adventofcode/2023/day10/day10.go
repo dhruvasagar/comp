@@ -279,28 +279,7 @@ func (g Grid) connected(p1 Pos, p2 Pos) bool {
 	return false
 }
 
-func (g Grid) printDists(dists map[Pos]int) string {
-	var sb strings.Builder
-	for y := 0; y < g.ymax; y++ {
-		sb.WriteRune('\n')
-		for x := 0; x < g.xmax; x++ {
-			pos := Pos{x, y}
-			c := dists[pos]
-			t := g.pipes[pos]
-			if t == Start {
-				sb.WriteRune('S')
-			} else if c == 0 {
-				sb.WriteRune('.')
-			} else {
-				sb.WriteString(fmt.Sprintf("%c", t))
-			}
-		}
-	}
-	return sb.String()
-}
-
-func (g *Grid) findLoop() int {
-	count := 0
+func (g *Grid) findLoop() {
 	visited := make(map[Pos]bool)
 	for y := 0; y < g.ymax; y++ {
 		for x := 0; x < g.xmax; x++ {
@@ -321,7 +300,6 @@ func (g *Grid) findLoop() int {
 		if visited[top] {
 			continue
 		}
-		count += 1
 		visited[top] = true
 		g.loop = append(g.loop, top)
 
@@ -331,12 +309,11 @@ func (g *Grid) findLoop() int {
 			}
 		}
 	}
-
-	return count / 2
 }
 
 func part1(grid *Grid) int {
-	return grid.findLoop()
+	grid.findLoop()
+	return len(grid.loop) / 2
 }
 
 func abs(x int) int {
@@ -346,7 +323,7 @@ func abs(x int) int {
 	return x
 }
 
-func (g Grid) loopArea() int {
+func (g Grid) areaUnderLoop() int {
 	// Reference https://en.wikipedia.org/wiki/Shoelace_formula
 	n := len(g.loop)
 	area := 0
@@ -359,7 +336,7 @@ func (g Grid) loopArea() int {
 
 func (g Grid) countEnclosed() int {
 	// Reference https://nrich.maths.org/5441
-	return g.loopArea() - len(g.loop)/2 + 1
+	return g.areaUnderLoop() - len(g.loop)/2 + 1
 }
 
 func part2(grid *Grid) int {
