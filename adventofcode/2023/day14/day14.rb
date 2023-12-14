@@ -11,7 +11,7 @@ class Grid
   end
 
   def hash
-    grid.map(&:join).join
+    grid.map(&:join).join.hash
   end
 
   def tilt_step(dx, dy)
