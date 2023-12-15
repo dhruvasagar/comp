@@ -20,24 +20,24 @@ hash = foldl f 0
 
 type HashMap = M.Map Int [(String, Int)]
 
-delete :: String -> [(String, Int)] -> [(String, Int)]
-delete l = filter ((/= l) . fst)
+deleteLens :: String -> [(String, Int)] -> [(String, Int)]
+deleteLens l = filter ((/= l) . fst)
 
 delOp :: String -> HashMap -> HashMap
 delOp l m
-    | M.member index m = M.insert index (delete l boxes) m
+    | M.member index m = M.insert index (deleteLens l boxes) m
     | otherwise = m
   where
     index = hash l
     boxes = fromJust $ M.lookup index m
 
-update :: (String, Int) -> [(String, Int)] -> [(String, Int)]
-update (l, f) bs = case findIndex ((== l) . fst) bs of
+updateLens :: (String, Int) -> [(String, Int)] -> [(String, Int)]
+updateLens (l, f) bs = case findIndex ((== l) . fst) bs of
     Nothing -> bs ++ [(l, f)]
     (Just lindex) -> (take lindex bs) ++ [(l, f)] ++ (drop (lindex + 1) bs)
 
 setOp :: (String, Int) -> HashMap -> HashMap
-setOp (l, f) m = M.insert index (update (l, f) boxes) m
+setOp (l, f) m = M.insert index (updateLens (l, f) boxes) m
   where
     index = hash l
     boxes = fromMaybe [] $ M.lookup index m
