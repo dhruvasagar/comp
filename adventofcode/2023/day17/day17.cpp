@@ -27,13 +27,6 @@ struct Node {
   bool operator<(const Node &n) const {
     return cost > n.cost;
   }
-
-  string toString() const {
-    return "cost: " + to_string(cost) + ", " +
-           "dir_index: " + to_string(dir_index) + ", " +
-           "block_size: " + to_string(block_size) + ", " +
-           "pos: [" + to_string(pos.first) + ", " + to_string(pos.second) + "]";
-  }
 };
 
 struct VisitedItem {
@@ -52,13 +45,7 @@ struct VisitedItem {
   }
 
   bool operator==(const VisitedItem &v) const {
-    return dir_index == v.dir_index && block_size == v.block_size && pos.first == v.pos.first && pos.second == v.pos.second;
-  }
-
-  string toString() const {
-    return "dir_index: " + to_string(dir_index) + ", " +
-           "block_size: " + to_string(block_size) + ", " +
-           "pos: [" + to_string(pos.first) + ", " + to_string(pos.second) + "]";
+    return dir_index == v.dir_index && block_size == v.block_size && pos == v.pos;
   }
 };
 
