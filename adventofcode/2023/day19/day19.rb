@@ -45,7 +45,6 @@ def apply_rule(rmap, part, rule='in')
   }
   total
 end
-
 def apply_rules(parts, rmap) = parts.reduce(0) {|s, p| s + apply_rule(rmap, p)}
 
 def rating_range(part) = part.values.reduce(1) {|s, r| s * r.size}
