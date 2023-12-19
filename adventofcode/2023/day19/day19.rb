@@ -28,25 +28,26 @@ def parse_input(lines)
 end
 
 def rating(part) = part.values.sum
-def apply_rule(part, rmap)
-  rule = 'in'
-  while true
-    rule = rmap[rule].each {|r|
-      if r.is_a?(Array)
-        pr, cmp, v, nrule = r
-        break nrule if (cmp == '<' && part[pr] < v) || (cmp == '>' && part[pr] > v)
-      else
-        break r
+def apply_rule(rmap, part, rule='in')
+  return 0 if rule == 'R'
+  return rating(part) if rule == 'A'
+
+  total = 0
+  rmap[rule].each {|r|
+    if r.is_a?(Array)
+      pr, cmp, v, nrule = r
+      if (cmp == '<' && part[pr] < v) || (cmp == '>' && part[pr] > v)
+        total += apply_rule(rmap, part, nrule) 
+        break
       end
-    }
-    return true if rule == 'A'
-    return false if rule == 'R'
-  end
+    else
+      total += apply_rule(rmap, part, r)
+    end
+  }
+  total
 end
 
-def apply_rules(parts, rmap) = parts
-  .select {|part| apply_rule(part, rmap)}
-  .reduce(0) {|s, p| s + rating(p)}
+def apply_rules(parts, rmap) = parts.reduce(0) {|s, p| s + apply_rule(rmap, p)}
 
 def rating_range(part) = part.values.reduce(1) {|s, r| s * r.size}
 def apply_rules_range(rmap, rule='in', part={"x" => (1..4000), "m" => (1..4000), "a" => (1..4000), "s" => (1..4000)})
