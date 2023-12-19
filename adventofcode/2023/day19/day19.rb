@@ -13,8 +13,7 @@ end
 def parse_input(lines)
   rules, ps = lines.split("\n\n").map(&:split)
   rmap = rules.reduce({}) {|m, rule|
-    key, rs = [$1, parse_rule($2)] if rule =~ /(.*){(.*)}/
-    m[key] = rs
+    m[$1] = parse_rule($2) if rule =~ /(.*){(.*)}/
     m
   }
   parts = ps.reduce([]) {|pr, part|
