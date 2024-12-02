@@ -1,4 +1,12 @@
+def part1 ls, rs
+  ls.each.with_index.reduce(0) {|r, (l, i)| r + (l - rs[i]).abs}
+end
+
+def part2 ls, rs
+  ls.reduce(0) {|r, l| r + l * rs.count(l)}
+end
+
 nums = readlines.map(&:split)
-lnums, rnums = nums.map(&:first).map(&:to_i).sort, nums.map(&:last).map(&:to_i).sort
-p lnums.map.with_index {|lnum, i| (lnum - rnums[i]).abs}.sum
-p lnums.map {|lnum| lnum * rnums.count(lnum)}.sum
+ls, rs, *_ = nums.transpose.map {|x| x.map(&:to_i)}
+p part1 ls.sort, rs.sort
+p part2 ls, rs
