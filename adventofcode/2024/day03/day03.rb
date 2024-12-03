@@ -10,8 +10,8 @@ end
 
 MUL_DODONT_REGEX = /mul\(\d{1,3},\d{1,3}\)|do\(\)|don't\(\)/
 def part2 program
-  enable = true
   muls = []
+  enable = true
   program.scan(MUL_DODONT_REGEX).each do |inst|
     if inst =~ /do\(\)/
       enable = true
