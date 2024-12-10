@@ -23,10 +23,9 @@ class TopographicalMap
     x >= 0 && y >= 0 && x < xmax && y < ymax
   end
 
-  def score(rating=false)
+  def score(rating: false)
     trail_head_map.keys.reduce(0) {|score, pos|
       q = [pos]
-      t = pmap[pos]
       vis = {}
       while !q.empty?
         top = q.pop
@@ -45,7 +44,7 @@ class TopographicalMap
 end
 
 def part1(tmap) = tmap.score
-def part2(tmap) = tmap.score(true)
+def part2(tmap) = tmap.score(rating: true)
 
 map = ARGF.readlines.map {|l| l.chomp.chars.map(&:to_i)}
 tmap = TopographicalMap.new(map)
