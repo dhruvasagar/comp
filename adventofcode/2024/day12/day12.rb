@@ -86,10 +86,12 @@ class Garden
   def perimeter2(region)
     region.reduce(0) {|per, (x, y)|
       c = @grid_map[[x, y]]
+      # Outter Corners
       per += 1 if @grid_map[[x - 1, y]] != c && @grid_map[[x, y - 1]] != c
       per += 1 if @grid_map[[x + 1, y]] != c && @grid_map[[x, y - 1]] != c
       per += 1 if @grid_map[[x - 1, y]] != c && @grid_map[[x, y + 1]] != c
       per += 1 if @grid_map[[x + 1, y]] != c && @grid_map[[x, y + 1]] != c
+      # Inner Corners
       per += 1 if @grid_map[[x - 1, y]] == c && @grid_map[[x, y - 1]] == c && @grid_map[[x - 1, y - 1]] != c
       per += 1 if @grid_map[[x + 1, y]] == c && @grid_map[[x, y - 1]] == c && @grid_map[[x + 1, y - 1]] != c
       per += 1 if @grid_map[[x - 1, y]] == c && @grid_map[[x, y + 1]] == c && @grid_map[[x - 1, y + 1]] != c
