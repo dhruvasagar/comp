@@ -1,30 +1,13 @@
 # frozen_string_literal: true
 
 class Garden
-  attr_accessor :ymax, :xmax, :grid, :grid_map, :garden_region_map
+  attr_accessor :ymax, :xmax, :grid_map, :garden_region_map
 
   def initialize(lines)
-    @grid = []
     @grid_map = {}
     @garden_region_map = {}
     @ymax, @xmax = lines.size, lines.first.size
-    lines.each.with_index {|row, y|
-      @grid << row.chars
-      row.chars.each_with_index {|c, x|
-        pos = [x, y]
-        @grid_map[pos] = c
-        # @garden_region_map[c] ||= []
-        # if @garden_region_map[c].empty?
-        #   @garden_region_map[c] << pos
-        # else
-        #   if @garden_region_map[c].any? {|gpos| is_neigh?(gpos, pos)}
-        #     @garden_region_map[c] << pos
-        #   else
-        #     (@garden_region_map["#{c}#{@garden_region_map.keys.size}"] ||= []) << pos
-        #   end
-        # end
-      }
-    }
+    lines.each_index {|y| lines[y].chars.each_with_index {|c, x| @grid_map[[x,y]] = c}}
     build_region_map
   end
 
@@ -46,20 +29,11 @@ class Garden
 
           vis[top] = true
           @garden_region_map[key] << top
-          neighs(top)
-            .filter {|np| !vis[np] && c == @grid_map[np]}
-            .each {|np| q << np}
+          q += neighs(top).filter {|np| !vis[np] && c == @grid_map[np]}
         end
       }
     }
   end
-
-  def to_s
-    p @grid
-    p @grid_map
-    p @garden_region_map
-  end
-  alias_method :to_s, :inspect
 
   def inside?((x,y))
     x >= 0 && y >= 0 && x < xmax && y < ymax
@@ -67,10 +41,6 @@ class Garden
 
   def neighs((x,y), all=false)
     [[x - 1, y], [x, y - 1], [x + 1, y], [x, y + 1]].select {|p| all || inside?(p)}
-  end
-
-  def is_neigh?(pos, npos)
-    neighs(pos).include?(npos)
   end
 
   def area(region)
@@ -112,7 +82,13 @@ end
 def part1(garden) = garden.price
 def part2(garden) = garden.price2
 
+def tdiff(s,e) = "#{(e - s) * 1000}ms"
+
 lines = ARGF.readlines
 garden = Garden.new(lines.map(&:chomp))
+s = Process.clock_gettime(Process::CLOCK_MONOTONIC)
 p part1 garden
+e1 = Process.clock_gettime(Process::CLOCK_MONOTONIC)
 p part2 garden
+e2 = Process.clock_gettime(Process::CLOCK_MONOTONIC)
+puts "Time taken part1: #{tdiff(s,e1)}, part2: #{tdiff(e1,e2)}, total: #{tdiff(s,e2)}"
