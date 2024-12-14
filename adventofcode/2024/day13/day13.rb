@@ -39,15 +39,19 @@ class ClawMachine
     "#{button_a}, #{button_b}, #{prize}"
   end
 
-  def tokens
-    soln = Equation.new(
+  def solve(n=0)
+    Equation.new(
       button_a[0],
       button_b[0],
-      prize[0],
+      n + prize[0],
       button_a[1],
       button_b[1],
-      prize[1]
+      n + prize[1]
     ).solve
+  end
+
+  def tokens
+    soln = solve
     return 0 if soln.nil?
 
     x, y = soln
@@ -55,14 +59,7 @@ class ClawMachine
   end
 
   def tokens2
-    soln = Equation.new(
-      button_a[0],
-      button_b[0],
-      10000000000000 + prize[0],
-      button_a[1],
-      button_b[1],
-      10000000000000 + prize[1]
-    ).solve
+    soln = solve(10000000000000)
     return 0 if soln.nil?
 
     x, y = soln
