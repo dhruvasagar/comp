@@ -8,7 +8,7 @@ def solve stone, blinks
   @mem[[stone, blinks]] = if stone == 0
                             solve(1, blinks - 1)
                           elsif stone.to_s.size % 2 == 0
-                            mid = (stone.to_s.size / 2)
+                            mid = stone.to_s.size / 2
                             solve(stone.to_s[0...mid].to_i, blinks - 1) + solve(stone.to_s[mid..].to_i, blinks - 1)
                           else
                             solve(stone * 2024, blinks - 1)

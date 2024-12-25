@@ -45,8 +45,13 @@ end
 
 def part1(tmap) = tmap.score
 def part2(tmap) = tmap.score(rating: true)
+def tdiff(t2, t1) = "#{(t2 - t1) * 1000}ms"
 
+s = Process.clock_gettime(Process::CLOCK_MONOTONIC)
 map = ARGF.readlines.map {|l| l.chomp.chars.map(&:to_i)}
 tmap = TopographicalMap.new(map)
 p part1 tmap
+e1 = Process.clock_gettime(Process::CLOCK_MONOTONIC)
 p part2 tmap
+e2 = Process.clock_gettime(Process::CLOCK_MONOTONIC)
+puts "Time for part1: #{tdiff(e1, s)}, part2: #{tdiff(e2, e1)}, total: #{tdiff(e2,s)}"
